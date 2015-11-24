@@ -5,6 +5,7 @@ import edu.uci.ics.jung.graph.*;
 import edu.uci.ics.jung.visualization.*;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+//import edu.uci.ics.jung.graph.UndirectedSparseMultigraph;
 
 import org.apache.commons.collections15.*;
 
@@ -68,14 +69,14 @@ public class SimpleGraph extends JFrame {
     System.out.println("Ścieżka krytyczna: " + dist2);
     result2 += " Ścieżka krytyczna: " + dist2 + " (dni)";
     
-    // czerwone okno z danymi dla Ĺ›cieĹĽki krytycznej
-    JTextArea jta2 = new JTextArea();
-    jta2.setText(result2);
-    jta2.setBounds(500, 450, 301, 200);
-    jta2.setBackground(new Color(255,0,0));
-    jta2.setForeground(new Color(255,255,255));
-    getContentPane().add(jta2, 1);
-    jta2.setVisible(true);
+    // czerwone okno z danymi dla ścieżki krytycznej
+//    JTextArea jta2 = new JTextArea();
+//    jta2.setText(result2);
+//    jta2.setBounds(500, 450, 301, 200);
+//    jta2.setBackground(new Color(255,0,0));
+//    jta2.setForeground(new Color(255,255,255));
+//    getContentPane().add(jta2, 1);
+//    jta2.setVisible(true);
     
     VisualizationViewer<Integer,String> vv = 
      new VisualizationViewer<Integer,String>(new FRLayout(g), new Dimension (800,400));
@@ -87,19 +88,18 @@ public class SimpleGraph extends JFrame {
 
     pack();
     
-    setSize (new Dimension (800, 700));
+    setSize (new Dimension (999, 700));
     setVisible(true);
   }
  
   
   /**
-   * tworzenie grafu do wyszukiwania najkrĂłtszej drogi
+   * tworzenie grafu do wyszukiwania najkrótszej drogi
    * 
    * @return Graph
    */
 public Graph getGraphForShortestPath() {
-//    Graph<Integer, String> g = new DirectedSparseGraph<Integer, String>();
-	  Graph<Integer, MyLink> g = new DirectedSparseMultigraph<Integer, MyLink>();
+	Graph<Integer, MyLink> g = new UndirectedSparseMultigraph<Integer, MyLink>(); //UndirectedSparseMultigraph / DirectedSparseMultigraph
     g.addVertex((Integer)1);
     g.addVertex((Integer)2);
     g.addVertex((Integer)3);
@@ -109,7 +109,11 @@ public Graph getGraphForShortestPath() {
     g.addVertex((Integer)7);
     g.addVertex((Integer)8);
     g.addVertex((Integer)9);
-    //dla Ĺ›cieĹĽki min 2 razy ta sama wartoĹ›Ä‡ w MyLink
+    g.addVertex((Integer)10);
+    g.addVertex((Integer)11);
+    g.addVertex((Integer)12);
+    
+    //dla ścieżki minimalnej 2 razy ta sama wartość w MyLink
     g.addEdge(new MyLink(7, 7, "E"), 1, 2);
     g.addEdge(new MyLink(20, 20, "F"), 1, 3);
     g.addEdge(new MyLink(8, 8, "M"), 2, 3);
