@@ -20,7 +20,7 @@ public class SimpleGraph extends JFrame {
 	private double maxWeight = 0;
 	
   public SimpleGraph (){
-    super("Zad.4 - programowanie sieciowe (Wydra[199355], KawÄ™czyĹ„ski[199340])");
+    super("(Wydra[199355], Kawęczyński[199340])");
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		Transformer<MyLink, Double> wtTransformer = new Transformer<MyLink, Double>() {
@@ -31,17 +31,17 @@ public class SimpleGraph extends JFrame {
     
     Graph g = getGraphForShortestPath();
     DijkstraShortestPath<Integer,String> alg = new DijkstraShortestPath(g, wtTransformer);
-    List<String> lista = alg.getPath(1, 9);
-    Number dist = alg.getDistance(1, 9);
-    String result = " KrawÄ™dzie dla czasu minimalnego: \r\n";
+    List<String> lista = alg.getPath(1, 7);
+    Number dist = alg.getDistance(1, 7);
+    String result = " Krawędzie dla czasu minimalnego: \r\n";
     for (Object s : lista){
     	System.out.println(""+s);
     	result += s + "\r\n";
     }
-    System.out.println("minimalny czas wykonania: " + dist);
-    result += " minimalny czas wykonania: " + dist + " (dni)";
+    System.out.println("minimalny czas dotarcia: " + dist);
+    result += " minimalny czas dotarcia: " + dist + " (minut)";
     
-    // zielone okno z danymi najkrĂłtszej drogi w grafie
+    // zielone okno z danymi najkróttszej drogi w grafie
     JTextArea jta = new JTextArea();
     jta.setText(result);
     jta.setBounds(200, 450, 299, 200);
@@ -49,7 +49,7 @@ public class SimpleGraph extends JFrame {
     getContentPane().add(jta, 0);
     jta.setVisible(true);
     
-    //algorytm dla Ĺ›cieĹĽki krytycznej:
+    //algorytm dla ścieżki krytycznej:
     Graph gmax = getGraphForCriticalPath();
     DijkstraShortestPath<Integer,MyLink> alg2 = new DijkstraShortestPath(gmax, wtTransformer);
     List<MyLink> lista2 = alg2.getPath(1, 9);
@@ -60,13 +60,13 @@ public class SimpleGraph extends JFrame {
     	dist2 += l.getCapacity();
     }
     
-    String result2 = " KrawÄ™dzie dla Ĺ›cieĹĽki krytycznej: \r\n";
+    String result2 = " Krawędzie dla ścieżki krytycznej: \r\n";
     for (MyLink s : lista2){
     	System.out.println(""+s.toStringWithCapacity());
     	result2 += s + "\r\n";
     }
-    System.out.println("Ĺ›cieĹĽka krytyczna: " + dist2);
-    result2 += " Ĺ›cieĹĽka krytyczna: " + dist2 + " (dni)";
+    System.out.println("Ścieżka krytyczna: " + dist2);
+    result2 += " Ścieżka krytyczna: " + dist2 + " (dni)";
     
     // czerwone okno z danymi dla Ĺ›cieĹĽki krytycznej
     JTextArea jta2 = new JTextArea();
@@ -122,14 +122,14 @@ public Graph getGraphForShortestPath() {
     g.addEdge(new MyLink(13, 13, "K"), 6, 7);
     g.addEdge(new MyLink(10, 10, "L"), 4, 7);
     g.addEdge(new MyLink(7, 7, "A"), 3, 7);
-    g.addEdge(new MyLink(10, 10, "Ĺ�"), 7, 8);
+    g.addEdge(new MyLink(10, 10, "Ł"), 7, 8);
     g.addEdge(new MyLink(10, 10, "I"), 5, 8);
     g.addEdge(new MyLink(3, 3, "N"), 8, 9);
     return g;
   }
   
   /**
-   * tworzenie grafu dla algorytmu wyszukiwania Ĺ›cieĹĽki krytycznej
+   * tworzenie grafu dla algorytmu wyszukiwania ścieżki krytycznej
    * 
    * @return Graph
    */
@@ -147,7 +147,7 @@ public Graph getGraphForCriticalPath() {
     // maxWeight to max_waga+1 w danym grafie
     //setMaxWeight(14.0);
     setMaxWeight(21.0);
-    // dla Ĺ›cieĹĽki krytycznej pierwsza wartoĹ›Ä‡ Myink dla algorytmu, druga do prezentacji
+    // dla ścieżki krytycznej pierwsza wartość MyLink dla algorytmu, druga do prezentacji
     g.addEdge(new MyLink(getMaxWeight() - 7, 7, "E"), 1, 2);
     g.addEdge(new MyLink(getMaxWeight() - 20, 20, "F"), 1, 3);
     g.addEdge(new MyLink(getMaxWeight() - 8, 8, "M"), 2, 3);
@@ -170,7 +170,7 @@ public Graph getGraphForCriticalPath() {
   public static void main(String[] args) {
 	  
 	  // TODO
-	  // Task powstaĹ‚ by moĹĽna go byĹ‚o zamieniÄ‡ na automatyczne tworzenie grafu
+	  // Task powstał‚ by można go było zamienić na automatyczne tworzenie grafu
 	  LinkedList<Task> tasks = new LinkedList<Task>();
 	  Task A = new Task("A", 7);
 	  Task B = new Task("B", 10);
@@ -281,7 +281,7 @@ public void setMaxWeight(double maxWeight) {
 //g.addEdge("K", 6, 7);
 //g.addEdge("L", 4, 7);
 //g.addEdge("A", 3, 7);
-//g.addEdge("Ĺ�", 7, 8);
+//g.addEdge("Ł", 7, 8);
 //g.addEdge("I", 5, 8);
 //g.addEdge("N", 8, 9);
 //return g;
