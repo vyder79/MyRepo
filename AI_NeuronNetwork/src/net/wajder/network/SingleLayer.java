@@ -19,12 +19,22 @@ public class SingleLayer {
 	}
 	
 	public void toStringOut(){
-		System.out.print("[");
+		System.out.print(this.description + "[");
 		for (Neuron n : this.singleLayer) {
 			n.toStringOut();
 		}
-		System.out.print("]" + this.description);
+		System.out.print("]");
 		System.out.println("");
+	}
+	
+	public String toStringOutString(){
+		String out = "\r\n\r\n";
+		out += this.description + "[";
+		for (Neuron n : this.singleLayer) {
+			out += n.toStringOutString();
+		}
+		out += "]";
+		return out;
 	}
 
 	public ArrayList<Neuron> getSingleLayer() {

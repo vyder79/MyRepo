@@ -110,6 +110,10 @@ public class Neuron {
 	public void toStringOut(){
 		System.out.print(this.description + " " + this.weights.toString() + ", ");
 	}
+	
+	public String toStringOutString(){
+		return "\r\n " + this.description + " " + this.weights.toString() + ", ";
+	}
 
 	/**
 	 *  getters and setters

@@ -20,7 +20,7 @@ public class NeuronNetwork {
 	
 	/** *****************************************************
 	 * 
-	 * main method to count output 
+	 * main method to count output (MADALINE)
 	 * 
 	 *********************************************************/
 	public String checkLetter(ArrayList<Integer> inputList){
@@ -75,6 +75,17 @@ public class NeuronNetwork {
 		this.descrption = descrption;
 	}
 
-	
+	@Override
+	public String toString(){
+		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
+			String out = "";
+			for (SingleLayer sl : this.neuronNetwork){
+				out += sl.toStringOutString();
+			}
+			return descrption + out;
+		}
+		return descrption + " is empty!";
+		
+	}
 	
 }
