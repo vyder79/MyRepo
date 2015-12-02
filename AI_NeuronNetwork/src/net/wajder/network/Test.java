@@ -22,6 +22,7 @@ public class Test {
 		 * wartoœci poszczególnych elementów okreœlaj¹ iloœæ neuronów w ka¿dej warstwie
 		 */
 		final int[] layersDesc = {4, 2, 4};
+		final int[] inputVector = {1, 0, 1, 0};
 		
 		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
 		
@@ -60,8 +61,18 @@ public class Test {
 			
 		}
 		
+		// utworzenie sieci
 		NeuronNetwork net = new NeuronNetwork(listOfLayers, "my neural network");
 		System.out.println(net);
+		
+		/*
+		 *  lets get started
+		 */
+		// podanie wektora wejæiowego i prezentacja wyników dla poszczególnych neuronów
+		net.doSomething(inputVector);
+		System.out.println(net);
+		
+		
 		
 	}
 

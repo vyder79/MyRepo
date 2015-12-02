@@ -56,7 +56,36 @@ public class NeuronNetwork {
 		
 		return resultAfterLastLayer.toString();
 	}
-
+	
+	/*
+	 * lets get started
+	 */
+	public void doSomething(int[] inputVector) {
+		
+		ArrayList<Double> outs = new ArrayList<Double>();
+		
+		// warstwa 0
+		for (int i=0; i<inputVector.length; i++) {
+			outs.clear();
+			outs.add((double)inputVector[i]);
+			this.neuronNetwork.get(0).getSingleLayer().get(i).activate(outs);
+		}
+		
+		// pozosta³e warstwy
+		for (int l=1; l<this.neuronNetwork.size(); l++) {
+			outs.clear();
+			// tworzymy wektor wejœciowy z wyjœæ poprzedniej warstwy
+			for (Neuron x : this.neuronNetwork.get(l-1).getSingleLayer()) {
+				outs.add(x.getOut());
+			}
+			// ka¿demu z neuronów podajemy wektor wejœciowy z wag poprzedniej warstwy
+			for (Neuron n : this.neuronNetwork.get(l).getSingleLayer()){
+				n.activate(outs);
+			}
+		}
+		
+		
+	}
 	
 	
 	public ArrayList<SingleLayer> getNeuronNetwork() {

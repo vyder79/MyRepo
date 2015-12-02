@@ -20,6 +20,12 @@ public class Neuron {
 	/** neuron's description */
 	private String description = "...";
 	
+	/** neuron's error */
+	private double error = 0d;
+	
+	/** neuron's output */
+	private double out = 0d;
+	
 	/** 
 	 * constructors 
 	 */
@@ -54,7 +60,8 @@ public class Neuron {
 		for (int i = 0; i < inputs.size(); i++) {
 			z += inputs.get(i) * this.weights.get(i);
 		}
-		return aFunction.func(z);
+		this.out = aFunction.func(z);
+		return this.out;
 	}
 	
 	/**
@@ -108,11 +115,11 @@ public class Neuron {
 	}
 	
 	public void toStringOut(){
-		System.out.print(this.description + " " + this.weights.toString() + ", ");
+		System.out.print(this.description + " " + this.weights.toString() + " = " + this.out);
 	}
 	
 	public String toStringOutString(){
-		return "\r\n " + this.description + " " + this.weights.toString() + ", ";
+		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out;
 	}
 
 	/**
@@ -140,6 +147,22 @@ public class Neuron {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public double getError() {
+		return error;
+	}
+
+	public void setError(double error) {
+		this.error = error;
+	}
+
+	public double getOut() {
+		return out;
+	}
+
+	public void setOut(double out) {
+		this.out = out;
 	}
 
 }
