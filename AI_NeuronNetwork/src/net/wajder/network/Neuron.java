@@ -115,11 +115,11 @@ public class Neuron {
 	}
 	
 	public void toStringOut(){
-		System.out.print(this.description + " " + this.weights.toString() + " = " + this.out);
+		System.out.print(this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error);
 	}
 	
 	public String toStringOutString(){
-		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out;
+		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error;
 	}
 
 	/**

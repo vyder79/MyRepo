@@ -83,8 +83,49 @@ public class NeuronNetwork {
 				n.activate(outs);
 			}
 		}
+	}
+	
+	/*
+	 * obliczenie b³êdu dla ka¿dgo neurona w sieci
+	 */
+	public void countErrors() {
 		
+		int layer = this.neuronNetwork.size();
+		double delta = 0d;
 		
+		for (Neuron n : this.neuronNetwork.get(layer - 1).getSingleLayer()) {
+			n.setError(n.getOut()*(1-n.getOut()));
+		}
+		
+		int l = 0; // numer wagi
+		for (Neuron n : this.neuronNetwork.get(layer - 2).getSingleLayer()) {
+			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getSingleLayer()) {
+				delta += nlast.getOut()*nlast.getWeights().get(l);
+			}
+			n.setError(delta*(n.getOut()*(1-n.getOut())));
+			l++;
+		}
+	}
+	
+	/*
+	 * obliczanie b³êdu œredniokwadratowego dla podanego wektora wejœciowego
+	 */
+	public double meanSquareError(int[] inputVector) {
+		
+		int layer = this.neuronNetwork.size();
+		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+		int neuronCount = sLayer.getSingleLayer().size();
+		System.out.println("\r\nb³¹d œredniokwadratowy:");
+		
+		double delta = 0d;
+		for (int i = 0; i < neuronCount; i++) {
+			double out = sLayer.getSingleLayer().get(i).getOut();
+			double sq = out - inputVector[i];
+			delta += sq*sq;
+			System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
+		}
+		System.out.println("["+delta +"/"+neuronCount+"]");
+		return delta / neuronCount;
 	}
 	
 	
@@ -116,5 +157,9 @@ public class NeuronNetwork {
 		return descrption + " is empty!";
 		
 	}
+
+	
+
+
 	
 }
