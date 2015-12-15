@@ -56,5 +56,13 @@ public class ActivationFunction {
 	public void setBeta(double beta) {
 		this.beta = beta;
 	}
+
+	public ActivFuncEnum getActivFunc() {
+		return activFunc;
+	}
+
+	public void setActivFunc(ActivFuncEnum activFunc) {
+		this.activFunc = activFunc;
+	}
 	
 }

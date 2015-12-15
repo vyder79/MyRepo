@@ -46,7 +46,7 @@ public class NeuronNetwork {
 		
 		System.out.println("obliczanie:");
 		
-		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getSingleLayer(); //neurony rozpoznaj¹ce litery
+		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); //neurony rozpoznaj¹ce litery
 		ArrayList<Double> resultAfterLastLayer = new ArrayList<>();
 		for (Neuron n : sl) {
 			double similarity = n.activate(normalizedInputList);
@@ -63,7 +63,7 @@ public class NeuronNetwork {
 	/*
 	 * lets get started
 	 */
-	public void doSomething(int[] inputVector) {
+	public void work(int[] inputVector) {
 		
 		ArrayList<Double> outs = new ArrayList<Double>();
 		
@@ -71,18 +71,18 @@ public class NeuronNetwork {
 		for (int i=0; i<inputVector.length; i++) {
 			outs.clear();
 			outs.add((double)inputVector[i]);
-			this.neuronNetwork.get(0).getSingleLayer().get(i).activate(outs);
+			this.neuronNetwork.get(0).getNeurons().get(i).activate(outs);
 		}
 		
 		// pozosta³e warstwy
 		for (int l=1; l<this.neuronNetwork.size(); l++) {
 			outs.clear();
 			// tworzymy wektor wejœciowy z wyjœæ poprzedniej warstwy
-			for (Neuron x : this.neuronNetwork.get(l-1).getSingleLayer()) {
+			for (Neuron x : this.neuronNetwork.get(l-1).getNeurons()) {
 				outs.add(x.getOut());
 			}
 			// ka¿demu z neuronów podajemy wektor wejœciowy z wag poprzedniej warstwy
-			for (Neuron n : this.neuronNetwork.get(l).getSingleLayer()){
+			for (Neuron n : this.neuronNetwork.get(l).getNeurons()){
 				n.activate(outs);
 			}
 		}
@@ -91,18 +91,20 @@ public class NeuronNetwork {
 	/*
 	 * obliczenie b³êdu dla ka¿dgo neurona w sieci
 	 */
-	public void countErrors() {
+	public void countErrors(int[] outputVector) {
 		
 		int layer = this.neuronNetwork.size();
 		double delta = 0d;
+		int counter = 0;
 		
-		for (Neuron n : this.neuronNetwork.get(layer - 1).getSingleLayer()) {
-			n.setError(n.getOut()*(1-n.getOut()));
+		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
+			n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
+			counter++;
 		}
 		
 		int l = 0; // numer wagi
-		for (Neuron n : this.neuronNetwork.get(layer - 2).getSingleLayer()) {
-			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getSingleLayer()) {
+		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
+			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
 				delta += nlast.getOut()*nlast.getWeights().get(l);
 			}
 			n.setError(delta*(n.getOut()*(1-n.getOut())));
@@ -117,20 +119,18 @@ public class NeuronNetwork {
 		
 		int layer = this.neuronNetwork.size();
 		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
-		int neuronCount = sLayer.getSingleLayer().size();
+		int neuronCount = sLayer.getNeurons().size();
 		if (Test.DEBUG) {
 			System.out.println("\r\nb³¹d œredniokwadratowy:");
 		}
 		
-		
 		double delta = 0d;
 		for (int i = 0; i < neuronCount; i++) {
-			double out = sLayer.getSingleLayer().get(i).getOut();
+			double out = sLayer.getNeurons().get(i).getOut();
 			double sq = out - inputVector[i];
 			delta += sq*sq;
 			if (Test.DEBUG) {
 				System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
-				
 			}
 		}
 		if (Test.DEBUG) {
@@ -139,6 +139,48 @@ public class NeuronNetwork {
 		return delta / neuronCount;
 	}
 	
+	/*
+	 * przeliczenie wag neuronów w sieci
+	 */
+	public void recalculateWeights() {
+		
+		int numberOfLayers = this.neuronNetwork.size();
+		SingleLayer layer = this.neuronNetwork.get(numberOfLayers-1); // ostatnia warstwa
+		ArrayList<Neuron> neurons = layer.getNeurons();
+		
+		SingleLayer layer_1 = this.neuronNetwork.get(numberOfLayers-2); // œrodkowa warstwa
+		ArrayList<Neuron> neurons_1 = layer_1.getNeurons();
+		
+		for (Neuron n : neurons) {
+			ArrayList<Double> newWeights = new ArrayList<>();
+			for (int i = 0; i < n.getWeights().size(); i++) {
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
+				//newWeights.add(12d);
+			}
+			//System.out.println("\r\n" + n.getDescription());
+			//System.out.println("before " + n.getWeights());
+			n.getWeights().clear();
+			n.setWeights(newWeights);
+			//System.out.println("after " + n.getWeights());
+		}
+		
+		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers-3); // pierwsza warstwa
+		ArrayList<Neuron> neurons_2 = layer_2.getNeurons();
+
+		for (Neuron n : neurons_1) {
+			ArrayList<Double> newWeights = new ArrayList<>();
+			for (int i = 0; i < n.getWeights().size(); i++) {
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_2.get(i).getOut());
+				//newWeights.add(12d);
+			}
+			//System.out.println("\r\n" + n.getDescription());
+			//System.out.println("before " + n.getWeights());
+			n.getWeights().clear();
+			n.setWeights(newWeights);
+			//System.out.println("after " + n.getWeights());
+		}
+		
+	}
 	
 	public ArrayList<SingleLayer> getNeuronNetwork() {
 		return neuronNetwork;
@@ -169,8 +211,5 @@ public class NeuronNetwork {
 		
 	}
 
-	
 
-
-	
 }

@@ -23,6 +23,7 @@ public class Test {
 		 */
 		final int[] layersDesc = {4, 2, 4};
 		final int[] inputVector = {0, 0, 1, 0};
+		final int[] outputVector = {0, 0, 1, 0};
 		
 		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
 		
@@ -38,7 +39,7 @@ public class Test {
 				Layer.clear();
 				weights.add(1d);
 				for (int j=0; j<layersDesc[layer]; j++){
-					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
+					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
 				//SingleLayer.toStringOut();
@@ -52,7 +53,7 @@ public class Test {
 					weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
 				}
 				for (int j=0; j<layersDesc[layer]; j++) {
-					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
+					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
 				//SingleLayer.toStringOut();
@@ -64,23 +65,29 @@ public class Test {
 		// utworzenie sieci
 		NeuronNetwork net = new NeuronNetwork(listOfLayers, "my neural network");
 		//System.out.println(net);
+
+
+		net.work(inputVector);
 		
-		/*
-		 *  lets get started
-		 */
-		// podanie wektora wejæiowego i prezentacja wyników dla poszczególnych neuronów
-		net.doSomething(inputVector);
-		//System.out.println(net);
-		
-		net.countErrors();
+		net.countErrors(outputVector);
 		System.out.println(net);
 		
 		double meanSquareError = net.meanSquareError(inputVector);
 		System.out.println("\r\n[meanSquareError: " + meanSquareError + "]");
 		
-//		ActivationFunction af = new ActivationFunction();
-//		af.test();
+		net.recalculateWeights();
+		System.out.println(net);
 		
+		
+		for (int i = 0; i < 200000; i++) {
+			net.work(inputVector);
+			net.countErrors(outputVector);
+			meanSquareError = net.meanSquareError(inputVector);
+			System.out.println("\r\n[meanSquareError: " + meanSquareError + "]");
+			net.recalculateWeights();
+		}
+		
+		System.out.println(net);
 	}
 
 }

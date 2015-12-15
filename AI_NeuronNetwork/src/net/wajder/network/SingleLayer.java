@@ -9,18 +9,18 @@ import java.util.ArrayList;
  */
 public class SingleLayer {
 	
-	private ArrayList<Neuron> singleLayer;
+	private ArrayList<Neuron> neurons;
 	
 	private String description;
 
 	public SingleLayer(ArrayList<Neuron> neurons, String description) {
 		this.description = description;
-		this.singleLayer = neurons;		
+		this.neurons = neurons;		
 	}
 	
 	public void toStringOut(){
 		System.out.print(this.description + "[");
-		for (Neuron n : this.singleLayer) {
+		for (Neuron n : this.neurons) {
 			n.toStringOut();
 		}
 		System.out.print("]");
@@ -30,19 +30,19 @@ public class SingleLayer {
 	public String toStringOutString(){
 		String out = "\r\n\r\n";
 		out += this.description + "[";
-		for (Neuron n : this.singleLayer) {
+		for (Neuron n : this.neurons) {
 			out += n.toStringOutString();
 		}
 		out += "]";
 		return out;
 	}
 
-	public ArrayList<Neuron> getSingleLayer() {
-		return singleLayer;
+	public ArrayList<Neuron> getNeurons() {
+		return neurons;
 	}
 
-	public void setSingleLayer(ArrayList<Neuron> singleLayer) {
-		this.singleLayer = singleLayer;
+	public void setNeurons(ArrayList<Neuron> singleLayer) {
+		this.neurons = singleLayer;
 	}
 
 	public String getDescription() {
