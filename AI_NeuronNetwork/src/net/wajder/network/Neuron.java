@@ -60,7 +60,8 @@ public class Neuron {
 		for (int i = 0; i < inputs.size(); i++) {
 			z += inputs.get(i) * this.weights.get(i);
 		}
-		this.out = aFunction.func(z);
+//		this.out = aFunction.func(z);
+		this.out = aFunction.sigmo(z);
 		return this.out;
 	}
 	

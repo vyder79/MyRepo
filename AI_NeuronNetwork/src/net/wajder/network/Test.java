@@ -77,6 +77,10 @@ public class Test {
 		
 		double meanSquareError = net.meanSquareError(inputVector);
 		System.out.println("[meanSquareError: " + meanSquareError + "]");
+		
+//		ActivationFunction af = new ActivationFunction();
+//		af.test();
+		
 	}
 
 }
