@@ -51,7 +51,10 @@ public class NeuronNetwork {
 		for (Neuron n : sl) {
 			double similarity = n.activate(normalizedInputList);
 			resultAfterLastLayer.add(similarity);
-			System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);
+			if(Test.DEBUG){
+				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
+			}
+			
 		}
 		
 		return resultAfterLastLayer.toString();
@@ -115,16 +118,24 @@ public class NeuronNetwork {
 		int layer = this.neuronNetwork.size();
 		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
 		int neuronCount = sLayer.getSingleLayer().size();
-		System.out.println("\r\nb³¹d œredniokwadratowy:");
+		if (Test.DEBUG) {
+			System.out.println("\r\nb³¹d œredniokwadratowy:");
+		}
+		
 		
 		double delta = 0d;
 		for (int i = 0; i < neuronCount; i++) {
 			double out = sLayer.getSingleLayer().get(i).getOut();
 			double sq = out - inputVector[i];
 			delta += sq*sq;
-			System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
+			if (Test.DEBUG) {
+				System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
+				
+			}
 		}
-		System.out.println("["+delta +"/"+neuronCount+"]");
+		if (Test.DEBUG) {
+			System.out.println("["+delta +"/"+neuronCount+"]");
+		}
 		return delta / neuronCount;
 	}
 	

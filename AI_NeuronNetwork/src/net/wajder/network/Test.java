@@ -38,7 +38,7 @@ public class Test {
 				Layer.clear();
 				weights.add(1d);
 				for (int j=0; j<layersDesc[layer]; j++){
-					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction()));
+					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
 				//SingleLayer.toStringOut();
@@ -49,10 +49,10 @@ public class Test {
 				weights.clear();
 				Layer.clear();
 				for (int i=0; i<layersDesc[layer-1]; i++) {
-					weights.add(rand.nextDouble());
+					weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
 				}
 				for (int j=0; j<layersDesc[layer]; j++) {
-					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction()));
+					Layer.add(new Neuron(weights, "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
 				//SingleLayer.toStringOut();
@@ -76,7 +76,7 @@ public class Test {
 		System.out.println(net);
 		
 		double meanSquareError = net.meanSquareError(inputVector);
-		System.out.println("[meanSquareError: " + meanSquareError + "]");
+		System.out.println("\r\n[meanSquareError: " + meanSquareError + "]");
 		
 //		ActivationFunction af = new ActivationFunction();
 //		af.test();

@@ -7,22 +7,35 @@ public class ActivationFunction {
 	
 	private double beta = 0.5;
 	private final double e = Math.E;
+	private ActivFuncEnum activFunc = ActivFuncEnum.LINEAR;
+	
+	public ActivationFunction(){
+		this.activFunc = ActivFuncEnum.LINEAR; // linear as default
+	}
+	
+	public ActivationFunction(ActivFuncEnum func){
+		this.activFunc = func;
+	}
+	
+	/*
+	 * uaktywnienie neuronu, obliczenie wyjœcia
+	 */
+	public double activate (double s) {
+		return this.activFunc == ActivFuncEnum.SIGMOID ? sigmoidal(s) : linear(s);
+	}
 	
 	/*
 	 * funkcja liniowa, zwraca dok³¹dnie to, co podano na wejœcie
 	 */
-	public double func(double value){
-		
-		return value;
+	private double linear(double s){
+		return s;
 	}
 	
 	/*
 	 * funkcja unipolarna sigmoidalna, przyjmuje wartoœci od 0 do 1
 	 */
-	public double sigmo(double s){
-		
+	private double sigmoidal(double s){
 		return 1 / (1 + Math.pow(e, (-1 * beta * s)));
-
 	}
 	
 	/*
@@ -31,7 +44,7 @@ public class ActivationFunction {
 	public void test(){
 		
 		for (double i=-20; i<=20; i=i+0.1){
-			System.out.println(sigmo(i));
+			System.out.println(sigmoidal(i));
 		}
 		
 	}
