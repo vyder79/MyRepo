@@ -47,6 +47,7 @@ public class SimpleGraphFireman extends JFrame {
 		}
 		
 		System.out.println(result);
+		
 			
 		
 		// zielone okno z danymi najkrótszej drogi w grafie
@@ -77,7 +78,7 @@ public class SimpleGraphFireman extends JFrame {
 	 * @return Graph
 	 */
 	public Graph getGraphForShortestPath() {
-		Graph<Integer, MyLink> g = new UndirectedSparseMultigraph<Integer, MyLink>(); // UndirectedSparseMultigraph
+		Graph<Integer, MyLink> g = new DirectedSparseMultigraph<Integer, MyLink>(); // UndirectedSparseMultigraph
 																						// /
 																						// DirectedSparseMultigraph
 		g.addVertex((Integer) 1);
@@ -118,6 +119,32 @@ public class SimpleGraphFireman extends JFrame {
 		g.addEdge(new MyLink(13, 13, "V"), 9, 12);
 		g.addEdge(new MyLink(9, 9, "W"), 10, 12);
 		g.addEdge(new MyLink(9, 9, "X"), 11, 12);
+		
+		//dla grafu skierowanego drogi powrotne (z górki, -5))
+		g.addEdge(new MyLink(12, 12, "AA"), 2, 1);
+		g.addEdge(new MyLink(16, 16, "BB"), 3, 1);
+		g.addEdge(new MyLink(8, 8, "CC"), 4, 1);
+		g.addEdge(new MyLink(20, 20, "DD"), 3, 2);
+		g.addEdge(new MyLink(11, 11, "EE"), 5, 2);
+		g.addEdge(new MyLink(5, 5, "FF"), 7, 2);
+		g.addEdge(new MyLink(15, 15, "GG"), 6, 3);
+		g.addEdge(new MyLink(5, 5, "HH"), 8, 3);
+		g.addEdge(new MyLink(10, 10, "II"), 2, 4);
+		g.addEdge(new MyLink(7, 7, "JJ"), 3, 4);
+		g.addEdge(new MyLink(14, 14, "KK"), 6, 4);
+		g.addEdge(new MyLink(5, 5, "LL"), 9, 4);
+		g.addEdge(new MyLink(4, 4, "MM"), 7, 5);
+		g.addEdge(new MyLink(13, 13, "NN"), 8, 5);
+		g.addEdge(new MyLink(12, 12, "OO"), 8, 6);
+		g.addEdge(new MyLink(16, 16, "PP"), 9, 6);
+		g.addEdge(new MyLink(9, 9, "QQ"), 8, 7);
+		g.addEdge(new MyLink(10, 10, "RR"), 11, 7);
+		g.addEdge(new MyLink(5, 5, "SS"), 11, 8);
+		g.addEdge(new MyLink(6, 6, "TT"), 12, 8);
+		g.addEdge(new MyLink(15, 15, "UU"), 10, 9);
+		g.addEdge(new MyLink(8, 8, "VV"), 12, 9);
+		g.addEdge(new MyLink(4, 4, "WW"), 12, 10);
+		g.addEdge(new MyLink(4, 4, "XX"), 12, 11);
 		return g;
 	}
 
