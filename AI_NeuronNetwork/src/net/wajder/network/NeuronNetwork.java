@@ -98,16 +98,22 @@ public class NeuronNetwork {
 		int counter = 0;
 		
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
-			n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
+			//n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
+			//////n.setError((n.getWeightedSum()*(1-n.getWeightedSum()) * (outputVector[counter]-n.getOut())));
+			n.setError(outputVector[counter]-n.getOut());
+			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			counter++;
 		}
 		
 		int l = 0; // numer wagi
 		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
 			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
-				delta += nlast.getOut()*nlast.getWeights().get(l);
+				//delta += nlast.getOut()*nlast.getWeights().get(l);
+				delta += nlast.getError()*nlast.getWeights().get(l);
 			}
-			n.setError(delta*(n.getOut()*(1-n.getOut())));
+			//n.setError(delta*(n.getOut()*(1-n.getOut())));
+			n.setError(delta*(n.getWeightedSum()*(1-n.getWeightedSum())));
+			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			l++;
 		}
 	}

@@ -26,6 +26,9 @@ public class Neuron {
 	/** neuron's output */
 	private double out = 0d;
 	
+	/** neuron's weighted sum */
+	private double weightedSum = 0d;
+	
 	/** 
 	 * constructors 
 	 */
@@ -60,6 +63,8 @@ public class Neuron {
 		for (int i = 0; i < inputs.size(); i++) {
 			z += inputs.get(i) * this.weights.get(i);
 		}
+		this.weightedSum = z;
+		//System.out.println("neuron weighted sum = " + this.weightedSum);
 		this.out = aFunction.activate(z);
 		return this.out;
 	}
@@ -154,7 +159,7 @@ public class Neuron {
 	}
 
 	public void setError(double error) {
-		this.error = error;
+		this.error = error < -999999999 ? -999999999 : (error > 999999999 ? 999999999 : error);
 	}
 
 	public double getOut() {
@@ -163,6 +168,14 @@ public class Neuron {
 
 	public void setOut(double out) {
 		this.out = out;
+	}
+
+	public double getWeightedSum() {
+		return weightedSum;
+	}
+
+	public void setWeightedSum(double weightedSum) {
+		this.weightedSum = weightedSum;
 	}
 
 }
