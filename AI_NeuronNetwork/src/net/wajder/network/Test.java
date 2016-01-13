@@ -33,50 +33,8 @@ public class Test {
 		final int[] outputVector1 = {0, 0, 0, 1};
 		final int[] outputVector2 = {1, 0, 0, 0};
 		final int[] outputVector3 = {0, 1, 0, 0};
-		
-		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
-		
-		for (int layer = 0; layer < layersDesc.length; layer++){
-			ArrayList<Double> weights = new ArrayList<>();
-			ArrayList<Neuron> Layer = new ArrayList<>();
-			SingleLayer SingleLayer = new SingleLayer(Layer, "init layer");
-			Random rand = new Random();
-			
-			if (layer == 0) { // warstwa pierwsza ró¿ni siê od pozosta³ych
-				
-				weights.clear();
-				Layer.clear();
-				weights.add(1d);
-				for (int j=0; j<layersDesc[layer]; j++){
-					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
-				}
-				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
-				listOfLayers.add(SingleLayer);
-				
-			} else { // kolejne warstwy
-				
-				weights.clear();
-				Layer.clear();
-				for (int j=0; j<layersDesc[layer]; j++) {
-					weights.clear();
-					for (int i=0; i<layersDesc[layer-1]; i++) {
-						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
-					}
-					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
-				}
-				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
-				listOfLayers.add(SingleLayer);
-			}
-			
-		}
-		
-		// utworzenie sieci
-		NeuronNetwork net = new NeuronNetwork(listOfLayers, "my neural network");
-		//System.out.println(net);
 
-
+		NeuronNetwork net = new NeuronNetwork(layersDesc, "my neural network second edition");
 		net.work(inputVector);
 		
 		net.countErrors(outputVector);
@@ -90,7 +48,7 @@ public class Test {
 		
 		long iterations = 0L;
 		//for (int i = 0; i < 20000000; i++) {
-		while (meanSquareError > 0.10) {
+		while (meanSquareError > 0.05) {
 			net.work(inputVector);
 			net.countErrors(outputVector);
 			double meanSquareError1 = net.meanSquareError(inputVector);
@@ -112,7 +70,7 @@ public class Test {
 			net.recalculateWeights();
 			
 			meanSquareError =  (meanSquareError1 + meanSquareError2 + meanSquareError3 + meanSquareError4) / 4;
-			if (iterations % 100000 == 0) System.out.println(" [meanSquareError: " + meanSquareError + "]" + "[" + meanSquareError1 + " : " + meanSquareError2 + " : " + meanSquareError3 + " : " + meanSquareError4 + "]");
+			if (iterations % 1000000 == 0) System.out.println(iterations + " : " + meanSquareError + " " + " : " + meanSquareError1 + " : " + meanSquareError2 + " : " + meanSquareError3 + " : " + meanSquareError4 + " ");
 			
 			iterations++;
 		}
@@ -120,7 +78,9 @@ public class Test {
 		System.out.println(net);
 		System.out.println("\r\n[meanSquareError: " + meanSquareError + "] after "+iterations+" iterations");
 		
-		
+		/*
+		 * prezentacja wyników dzia³ania nauczonej sieci
+		 */
 		System.out.println("results for [0, 0, 1, 0]:");
 		net.work(inputVector);
 		System.out.println(net);

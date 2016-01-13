@@ -1,5 +1,6 @@
 package net.wajder.network;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * List of single layers of neurons -> NETWORK
@@ -8,14 +9,64 @@ import java.util.ArrayList;
  *
  */
 public class NeuronNetwork {
-	
 	private ArrayList<SingleLayer> neuronNetwork;
-	
 	private String descrption;
 	
+	/**
+	 * @param neuronNetwork
+	 * @param description
+	 */
 	public NeuronNetwork(ArrayList<SingleLayer> neuronNetwork, String description) {
 		this.descrption = description;
 		this.neuronNetwork = neuronNetwork;
+	}
+	
+	
+	/**
+	 * @param layersDesc
+	 * @param description
+	 */
+	public NeuronNetwork(int[] layersDesc, String description){
+		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
+		
+		for (int layer = 0; layer < layersDesc.length; layer++){
+			ArrayList<Double> weights = new ArrayList<>();
+			ArrayList<Neuron> Layer = new ArrayList<>();
+			SingleLayer SingleLayer = new SingleLayer(Layer, "init layer");
+			Random rand = new Random();
+			
+			if (layer == 0) { // warstwa pierwsza ró¿ni siê od pozosta³ych
+				
+				weights.clear();
+				Layer.clear();
+				weights.add(1d);
+				for (int j=0; j<layersDesc[layer]; j++){
+					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
+				}
+				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
+				//SingleLayer.toStringOut();
+				listOfLayers.add(SingleLayer);
+				
+			} else { // kolejne warstwy
+				
+				weights.clear();
+				Layer.clear();
+				for (int j=0; j<layersDesc[layer]; j++) {
+					weights.clear();
+					for (int i=0; i<layersDesc[layer-1]; i++) {
+						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
+					}
+					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
+				}
+				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
+				//SingleLayer.toStringOut();
+				listOfLayers.add(SingleLayer);
+			}
+			
+		}
+		
+		this.descrption = description;
+		this.neuronNetwork = listOfLayers;
 	}
 	
 	/** *****************************************************
