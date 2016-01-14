@@ -126,6 +126,10 @@ public class Neuron {
 	public String toStringOutString(){
 		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error;
 	}
+	
+	public String toStringOutNeuronOutput(){
+		return " " + " " + this.out;
+	}
 
 	/**
 	 *  getters and setters

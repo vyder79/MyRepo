@@ -267,6 +267,18 @@ public class NeuronNetwork {
 		return descrption + " is empty!";
 		
 	}
+	
+	public String output(){
+		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
+			String out = "\r\n";
+			ArrayList<Neuron> neurons = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
+			for (Neuron n : neurons){
+				out += n.toStringOutNeuronOutput();
+			}
+			return out + "\r\n";
+		}
+		return descrption + " is empty!";
+	}
 
 
 }
