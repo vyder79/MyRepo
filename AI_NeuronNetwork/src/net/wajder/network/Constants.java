@@ -12,7 +12,7 @@ public class Constants {
 	public static final double ERROR_VALUE = 0.05;
 	
 	/** small number needs to backward error propagation learning */
-	public static final double EPSILON = 0.0001;
+	public static final double EPSILON = 0.005;
 	
 	/** number of input double values in trening pattern - number of neuron inputs */
 	public static final int HOW_MANY_PATTERN_ELEMENTS = 64;

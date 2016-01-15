@@ -21,31 +21,31 @@ public class Test {
 		 */
 		final int[] layersDesc = {4, 2, 4};
 		
-		final int[] inputVector0 = {0, 0, 1, 0};
-		final int[] inputVector1 = {0, 0, 0, 1};
-		final int[] inputVector2 = {1, 0, 0, 0};
-		final int[] inputVector3 = {0, 1, 0, 0};
+		final int[] inputVector0 = {1, 0, 0, 0};
+		final int[] inputVector1 = {0, 1, 0, 0};
+		final int[] inputVector2 = {0, 0, 1, 0};
+		final int[] inputVector3 = {0, 0, 0, 1};
 		
-		final int[] outputVector0 = {0, 0, 1, 0};
-		final int[] outputVector1 = {0, 0, 0, 1};
-		final int[] outputVector2 = {1, 0, 0, 0};
-		final int[] outputVector3 = {0, 1, 0, 0};
+		final int[] outputVector0 = {1, 0, 0, 0};
+		final int[] outputVector1 = {0, 1, 0, 0};
+		final int[] outputVector2 = {0, 0, 1, 0};
+		final int[] outputVector3 = {0, 0, 0, 1};
 
 		NeuronNetwork net = new NeuronNetwork(layersDesc, "my neural network second edition");
 		net.work(inputVector0);
 		
 		net.countErrors(outputVector0);
-		System.out.println(net);
+		//System.out.println(net);
 		
 		double meanSquareError = net.meanSquareError(inputVector0);
-		System.out.println("\r\n[meanSquareError: " + meanSquareError + "]");
+		//System.out.println("\r\n[meanSquareError: " + meanSquareError + "]");
 		
 		net.recalculateWeights();
-		System.out.println(net);
+		//System.out.println(net);
 		
 		long iterations = 0L;
 		//for (int i = 0; i < 20000000; i++) {
-		while (meanSquareError > 0.1) {
+		while (meanSquareError > Constants.ERROR_VALUE && iterations < 100000000) {
 			net.work(inputVector0);
 			net.countErrors(outputVector0);
 			double meanSquareError1 = net.meanSquareError(inputVector0);
@@ -67,8 +67,17 @@ public class Test {
 			net.recalculateWeights();
 			
 			meanSquareError =  (meanSquareError1 + meanSquareError2 + meanSquareError3 + meanSquareError4) / 4;
-			if (iterations % 100000 == 0) System.out.println(iterations + " : " + meanSquareError + " " + " : " + meanSquareError1 + " : " + meanSquareError2 + " : " + meanSquareError3 + " : " + meanSquareError4 + " ");
+			if (iterations % 1000000 == 0) {
+				System.out.println(iterations + " : " + meanSquareError + " " + " : " + meanSquareError1 + " : " + meanSquareError2 + " : " + meanSquareError3 + " : " + meanSquareError4 + " ");
+				//System.out.println(net);
+			}
 			
+//			meanSquareError =  (meanSquareError1 + meanSquareError2 + meanSquareError3) / 3;
+//			if (iterations % 10000 == 0) {
+//				System.out.println(iterations + " : " + meanSquareError + " " + " : " + meanSquareError1 + " : " + meanSquareError2 + " : "  + meanSquareError3);
+//				//System.out.println(net);
+//			}
+//			
 			iterations++;
 		}
 		

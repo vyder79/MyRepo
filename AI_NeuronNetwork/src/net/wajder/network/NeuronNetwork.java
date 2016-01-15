@@ -11,6 +11,9 @@ import java.util.Random;
 public class NeuronNetwork {
 	private ArrayList<SingleLayer> neuronNetwork;
 	private String descrption;
+	private int bias;
+	
+	private final int BIAS = 1;
 	
 	/**
 	 * @param neuronNetwork
@@ -19,6 +22,7 @@ public class NeuronNetwork {
 	public NeuronNetwork(ArrayList<SingleLayer> neuronNetwork, String description) {
 		this.descrption = description;
 		this.neuronNetwork = neuronNetwork;
+		this.bias = BIAS;
 	}
 	
 	
@@ -53,7 +57,8 @@ public class NeuronNetwork {
 				Layer.clear();
 				for (int j=0; j<layersDesc[layer]; j++) {
 					weights.clear();
-					for (int i=0; i<layersDesc[layer-1]; i++) {
+					//for (int i=0; i<layersDesc[layer-1]; i++) {
+					for (int i=0; i<layersDesc[layer-1]+1; i++) { // jedna waga wiêcej dla biasu
 						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
 					}
 					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
@@ -67,6 +72,7 @@ public class NeuronNetwork {
 		
 		this.descrption = description;
 		this.neuronNetwork = listOfLayers;
+		this.bias = BIAS;
 	}
 	
 	/** *****************************************************
@@ -132,6 +138,7 @@ public class NeuronNetwork {
 			for (Neuron x : this.neuronNetwork.get(l-1).getNeurons()) {
 				outs.add(x.getOut());
 			}
+			outs.add(Double.parseDouble(BIAS+""));
 			// ka¿demu z neuronów podajemy wektor wejœciowy z wag poprzedniej warstwy
 			for (Neuron n : this.neuronNetwork.get(l).getNeurons()){
 				n.activate(outs);
@@ -211,7 +218,8 @@ public class NeuronNetwork {
 		for (Neuron n : neurons) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
+				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
 				//newWeights.add(12d);
 			}
 			//System.out.println("\r\n" + n.getDescription());
@@ -227,7 +235,8 @@ public class NeuronNetwork {
 		for (Neuron n : neurons_1) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_2.get(i).getOut());
+				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_2.get(i).getOut());
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_2.get(i).getOut())  );
 				//newWeights.add(12d);
 			}
 			//System.out.println("\r\n" + n.getDescription());
@@ -256,7 +265,7 @@ public class NeuronNetwork {
 	}
 
 	@Override
-	public String toString(){
+	public String toString(){ // cala siec
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
 			String out = "";
 			for (SingleLayer sl : this.neuronNetwork){
@@ -268,7 +277,7 @@ public class NeuronNetwork {
 		
 	}
 	
-	public String output(){
+	public String output(){ // tylko ostatnia warstwa jest prezentowana
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
 			String out = "\r\n";
 			ArrayList<Neuron> neurons = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
@@ -280,5 +289,11 @@ public class NeuronNetwork {
 		return descrption + " is empty!";
 	}
 
+	public int getBias() {
+		return bias;
+	}
 
+	public void setBias(int bias) {
+		this.bias = bias;
+	}
 }

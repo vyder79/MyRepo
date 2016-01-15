@@ -5,7 +5,7 @@ package net.wajder.network;
  */
 public class ActivationFunction {
 	
-	private double beta = 0.5;
+	private double beta = 2.0;
 	private final double e = Math.E;
 	private ActivFuncEnum activFunc = ActivFuncEnum.LINEAR;
 	
