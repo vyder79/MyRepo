@@ -158,7 +158,8 @@ public class NeuronNetwork {
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
 			//n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
 			//////n.setError((n.getWeightedSum()*(1-n.getWeightedSum()) * (outputVector[counter]-n.getOut())));
-			n.setError(outputVector[counter]-n.getOut());
+			//n.setError(outputVector[counter]-n.getOut());
+			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
 			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			counter++;
 		}
@@ -220,6 +221,9 @@ public class NeuronNetwork {
 			for (int i = 0; i < n.getWeights().size(); i++) {
 				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
 				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
+				//Random rand = new Random();
+				//double epsilon = rand.nextDouble() / 100;
+				//newWeights.add(n.getWeights().get(i) + (epsilon * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
 				//newWeights.add(12d);
 			}
 			//System.out.println("\r\n" + n.getDescription());
