@@ -75,47 +75,6 @@ public class NeuronNetwork {
 		this.bias = BIAS;
 	}
 	
-	/** *****************************************************
-	 * 
-	 * main method to count output (MADALINE)
-	 * 
-	 *********************************************************/
-	public String checkLetter(ArrayList<Integer> inputList){
-		//normalizacja
-		int ones = 0;
-		ArrayList<Double> normalizedInputList = new ArrayList<>();
-		// policzenie jedynek w literze
-		for (Integer l : inputList){
-			if (l == 1) {
-				ones++;
-			}
-		}
-		System.out.println("wektor wejœciowy: " + inputList + " jedynki:" + ones);
-		
-		// zamiana jedynek na znormalizowan¹ wartoœæ
-		for (Integer l : inputList){
-			if (l == 1) {
-				normalizedInputList.add(1/Math.sqrt(ones));
-			} else {
-				normalizedInputList.add(0d);
-			}
-		}
-		
-		System.out.println("obliczanie:");
-		
-		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); //neurony rozpoznaj¹ce litery
-		ArrayList<Double> resultAfterLastLayer = new ArrayList<>();
-		for (Neuron n : sl) {
-			double similarity = n.activate(normalizedInputList);
-			resultAfterLastLayer.add(similarity);
-			if(Test.DEBUG){
-				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
-			}
-			
-		}
-		
-		return resultAfterLastLayer.toString();
-	}
 	
 	/*
 	 * lets get started
@@ -170,8 +129,8 @@ public class NeuronNetwork {
 				//delta += nlast.getOut()*nlast.getWeights().get(l);
 				delta += nlast.getError()*nlast.getWeights().get(l);
 			}
-			//n.setError(delta*(n.getOut()*(1-n.getOut())));
-			n.setError(delta*(n.getWeightedSum()*(1-n.getWeightedSum())));
+			n.setError(delta*(n.getOut()*(1-n.getOut())));
+			//n.setError(delta*(n.getWeightedSum()*(1-n.getWeightedSum())));
 			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			l++;
 		}
@@ -300,4 +259,47 @@ public class NeuronNetwork {
 	public void setBias(int bias) {
 		this.bias = bias;
 	}
+	
+	/** *****************************************************
+	 * 
+	 * main method to count output (MADALINE)
+	 * 
+	 *********************************************************/
+	public String checkLetter(ArrayList<Integer> inputList){
+		//normalizacja
+		int ones = 0;
+		ArrayList<Double> normalizedInputList = new ArrayList<>();
+		// policzenie jedynek w literze
+		for (Integer l : inputList){
+			if (l == 1) {
+				ones++;
+			}
+		}
+		System.out.println("wektor wejœciowy: " + inputList + " jedynki:" + ones);
+		
+		// zamiana jedynek na znormalizowan¹ wartoœæ
+		for (Integer l : inputList){
+			if (l == 1) {
+				normalizedInputList.add(1/Math.sqrt(ones));
+			} else {
+				normalizedInputList.add(0d);
+			}
+		}
+		
+		System.out.println("obliczanie:");
+		
+		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); //neurony rozpoznaj¹ce litery
+		ArrayList<Double> resultAfterLastLayer = new ArrayList<>();
+		for (Neuron n : sl) {
+			double similarity = n.activate(normalizedInputList);
+			resultAfterLastLayer.add(similarity);
+			if(Test.DEBUG){
+				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
+			}
+			
+		}
+		
+		return resultAfterLastLayer.toString();
+	}
+	
 }
