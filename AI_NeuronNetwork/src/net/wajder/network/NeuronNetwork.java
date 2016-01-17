@@ -27,6 +27,7 @@ public class NeuronNetwork {
 	 * @param layersDesc
 	 * @param description
 	 */
+	@SuppressWarnings("unchecked")
 	public NeuronNetwork(int[] layersDesc, String description){
 		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
 		
@@ -77,9 +78,11 @@ public class NeuronNetwork {
 		double meanSquareError = this.meanSquareError(treningPatterns.get(0).getInputArray());
 		this.recalculateWeights();
 		
+		
 		long iterations = 0L;
 		while (meanSquareError > Constants.ERROR_VALUE && iterations < 100000000) {
 			meanSquareError = 0d;
+			// TODO: nauka powinna za ka¿dym razem korzystaæ z innej kolejnoœci wzorców treningowych
 			for (TreningPattern tp : treningPatterns){
 				this.work(tp.getInputArray());
 				this.countErrors(tp.getOutputArray());

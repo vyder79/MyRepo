@@ -1,7 +1,6 @@
 package net.wajder.network;
 /**
  * @author vyder
- *
  */
 public class ActivationFunction {
 	

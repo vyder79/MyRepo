@@ -6,7 +6,6 @@ import java.util.ArrayList;
  * value of output for specified input list)
  * 
  * @author vyder
- *
  */
 public class TreningPattern {
 	
@@ -38,7 +37,9 @@ public class TreningPattern {
 		this.outputArray = outputArray;
 	}
 
-	// getters and seters
+	/**
+	 *  getters and setters
+	 */
 	public ArrayList<Double> getInputList() {
 		return inputList;
 	}
