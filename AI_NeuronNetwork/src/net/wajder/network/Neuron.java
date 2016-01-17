@@ -64,7 +64,6 @@ public class Neuron {
 			z += inputs.get(i) * this.weights.get(i);
 		}
 		this.weightedSum = z;
-		//System.out.println("neuron weighted sum = " + this.weightedSum);
 		this.out = aFunction.activate(z);
 		return this.out;
 	}

@@ -6,14 +6,11 @@ import java.util.Random;
  * List of single layers of neurons -> NETWORK
  * 
  * @author vyder
- *
  */
 public class NeuronNetwork {
 	private ArrayList<SingleLayer> neuronNetwork;
 	private String descrption;
 	private int bias;
-	
-	private final int BIAS = 1;
 	
 	/**
 	 * @param neuronNetwork
@@ -22,7 +19,7 @@ public class NeuronNetwork {
 	public NeuronNetwork(ArrayList<SingleLayer> neuronNetwork, String description) {
 		this.descrption = description;
 		this.neuronNetwork = neuronNetwork;
-		this.bias = BIAS;
+		this.bias = Constants.BIAS;
 	}
 	
 	
@@ -48,7 +45,6 @@ public class NeuronNetwork {
 					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
 				listOfLayers.add(SingleLayer);
 				
 			} else { // kolejne warstwy
@@ -57,36 +53,32 @@ public class NeuronNetwork {
 				Layer.clear();
 				for (int j=0; j<layersDesc[layer]; j++) {
 					weights.clear();
-					//for (int i=0; i<layersDesc[layer-1]; i++) {
-					for (int i=0; i<layersDesc[layer-1]+1; i++) { // jedna waga wiêcej dla biasu
+					for (int i=0; i<layersDesc[layer-1] + 1; i++) { // jedna waga wiêcej dla biasu
 						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
 					}
 					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
 				listOfLayers.add(SingleLayer);
 			}
 			
 		}
-		
 		this.descrption = description;
 		this.neuronNetwork = listOfLayers;
-		this.bias = BIAS;
+		this.bias = Constants.BIAS;
 	}
 	
 	
 	/*
 	 * lets get started
 	 */
-	public void work(int[] inputVector) {
-		
+	public void work(double[] inputVector) {
 		ArrayList<Double> outs = new ArrayList<Double>();
 		
 		// warstwa 0
 		for (int i=0; i<inputVector.length; i++) {
 			outs.clear();
-			outs.add((double)inputVector[i]);
+			outs.add(inputVector[i]);
 			this.neuronNetwork.get(0).getNeurons().get(i).activate(outs);
 		}
 		
@@ -97,7 +89,7 @@ public class NeuronNetwork {
 			for (Neuron x : this.neuronNetwork.get(l-1).getNeurons()) {
 				outs.add(x.getOut());
 			}
-			outs.add(Double.parseDouble(BIAS+""));
+			outs.add(Double.parseDouble(Constants.BIAS+""));
 			// ka¿demu z neuronów podajemy wektor wejœciowy z wag poprzedniej warstwy
 			for (Neuron n : this.neuronNetwork.get(l).getNeurons()){
 				n.activate(outs);
@@ -108,30 +100,23 @@ public class NeuronNetwork {
 	/*
 	 * obliczenie b³êdu dla ka¿dgo neurona w sieci
 	 */
-	public void countErrors(int[] outputVector) {
+	public void countErrors(double[] outputVector) {
 		
 		int layer = this.neuronNetwork.size();
 		double delta = 0d;
 		int counter = 0;
 		
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
-			//n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
-			//////n.setError((n.getWeightedSum()*(1-n.getWeightedSum()) * (outputVector[counter]-n.getOut())));
-			//n.setError(outputVector[counter]-n.getOut());
 			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
-			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			counter++;
 		}
 		
 		int l = 0; // numer wagi
 		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
 			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
-				//delta += nlast.getOut()*nlast.getWeights().get(l);
 				delta += nlast.getError()*nlast.getWeights().get(l);
 			}
 			n.setError(delta*(n.getOut()*(1-n.getOut())));
-			//n.setError(delta*(n.getWeightedSum()*(1-n.getWeightedSum())));
-			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			l++;
 		}
 	}
@@ -139,7 +124,7 @@ public class NeuronNetwork {
 	/*
 	 * obliczanie b³êdu œredniokwadratowego dla podanego wektora wejœciowego
 	 */
-	public double meanSquareError(int[] inputVector) {
+	public double meanSquareError(double[] inputVector) {
 		
 		int layer = this.neuronNetwork.size();
 		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
@@ -178,18 +163,10 @@ public class NeuronNetwork {
 		for (Neuron n : neurons) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
 				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
-				//Random rand = new Random();
-				//double epsilon = rand.nextDouble() / 100;
-				//newWeights.add(n.getWeights().get(i) + (epsilon * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
-				//newWeights.add(12d);
 			}
-			//System.out.println("\r\n" + n.getDescription());
-			//System.out.println("before " + n.getWeights());
 			n.getWeights().clear();
 			n.setWeights(newWeights);
-			//System.out.println("after " + n.getWeights());
 		}
 		
 		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers-3); // pierwsza warstwa
@@ -198,15 +175,10 @@ public class NeuronNetwork {
 		for (Neuron n : neurons_1) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_2.get(i).getOut());
 				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_2.get(i).getOut())  );
-				//newWeights.add(12d);
 			}
-			//System.out.println("\r\n" + n.getDescription());
-			//System.out.println("before " + n.getWeights());
 			n.getWeights().clear();
 			n.setWeights(newWeights);
-			//System.out.println("after " + n.getWeights());
 		}
 		
 	}
@@ -226,9 +198,17 @@ public class NeuronNetwork {
 	public void setDescrption(String descrption) {
 		this.descrption = descrption;
 	}
+	
+	public int getBias() {
+		return bias;
+	}
+
+	public void setBias(int bias) {
+		this.bias = bias;
+	}
 
 	@Override
-	public String toString(){ // cala siec
+	public String toString(){ // cala siec wraz z wagami i b³êdami neuronów
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
 			String out = "";
 			for (SingleLayer sl : this.neuronNetwork){
@@ -240,24 +220,22 @@ public class NeuronNetwork {
 		
 	}
 	
-	public String output(){ // tylko ostatnia warstwa jest prezentowana
+	public String output(){ // tylko wyjœcia neuronów
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
-			String out = "\r\n";
-			ArrayList<Neuron> neurons = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
+			String out = "\r\n hidden layer:"; // warstwa ukryta
+			ArrayList<Neuron> neurons = this.neuronNetwork.get(this.neuronNetwork.size() - 2).getNeurons();
 			for (Neuron n : neurons){
+				out += n.toStringOutNeuronOutput();
+			}
+
+			out += "\r\n output layer:"; // warstwa wyjœciowa
+			ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
+			for (Neuron n : neurons2){
 				out += n.toStringOutNeuronOutput();
 			}
 			return out + "\r\n";
 		}
 		return descrption + " is empty!";
-	}
-
-	public int getBias() {
-		return bias;
-	}
-
-	public void setBias(int bias) {
-		this.bias = bias;
 	}
 	
 	/** *****************************************************
