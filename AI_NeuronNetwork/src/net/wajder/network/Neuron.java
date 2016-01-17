@@ -83,7 +83,7 @@ public class Neuron {
 		Random r = new Random();
 		for (int i = 0; i < count; i++) {
 			this.weights.add(r.nextDouble());
-			if (Test.DEBUG) {
+			if (Constants.DEBUG) {
 				System.out.println("weight " + i + ": " + this.weights.get(i));
 			}
 		}
@@ -112,7 +112,7 @@ public class Neuron {
 		}
 		this.weights.clear();
 		this.weights = newWeights;
-		if (Test.DEBUG) {
+		if (Constants.DEBUG) {
 			System.out.println("errorValue " + Math.abs(errorValue));
 		}
 		return errorValue;

@@ -8,6 +8,9 @@ package net.wajder.network;
  */
 public class Constants {
 	
+	// when TRUE, additional data is shown when computing weights
+	final static boolean DEBUG = false;
+	
 	/** value of error to check if the neuron is learned or not */
 	public static final double ERROR_VALUE = 0.01;
 	

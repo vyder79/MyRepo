@@ -69,6 +69,30 @@ public class NeuronNetwork {
 	}
 	
 	
+	public void networkLearning(ArrayList<TreningPattern> treningPatterns){
+		
+		// wstêpne wyznaczenie b³êdu dla sieci
+		this.work(treningPatterns.get(0).getInputArray());
+		this.countErrors(treningPatterns.get(0).getOutputArray());
+		double meanSquareError = this.meanSquareError(treningPatterns.get(0).getInputArray());
+		this.recalculateWeights();
+		
+		long iterations = 0L;
+		while (meanSquareError > Constants.ERROR_VALUE && iterations < 100000000) {
+			meanSquareError = 0d;
+			for (TreningPattern tp : treningPatterns){
+				this.work(tp.getInputArray());
+				this.countErrors(tp.getOutputArray());
+				meanSquareError += this.meanSquareError(tp.getInputArray());
+				this.recalculateWeights();
+			}		
+			iterations++;
+		}
+		
+		System.out.println(this);
+		System.out.println("\r\n[meanSquareError: " + meanSquareError + "] after "+iterations+" iterations");
+	}
+	
 	/*
 	 * lets get started
 	 */
@@ -129,7 +153,7 @@ public class NeuronNetwork {
 		int layer = this.neuronNetwork.size();
 		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
 		int neuronCount = sLayer.getNeurons().size();
-		if (Test.DEBUG) {
+		if (Constants.DEBUG) {
 			System.out.println("\r\nb³¹d œredniokwadratowy:");
 		}
 		
@@ -138,11 +162,11 @@ public class NeuronNetwork {
 			double out = sLayer.getNeurons().get(i).getOut();
 			double sq = out - inputVector[i];
 			delta += sq*sq;
-			if (Test.DEBUG) {
+			if (Constants.DEBUG) {
 				System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
 			}
 		}
-		if (Test.DEBUG) {
+		if (Constants.DEBUG) {
 			System.out.println("["+delta +"/"+neuronCount+"]");
 		}
 		return delta / neuronCount;
@@ -271,7 +295,7 @@ public class NeuronNetwork {
 		for (Neuron n : sl) {
 			double similarity = n.activate(normalizedInputList);
 			resultAfterLastLayer.add(similarity);
-			if(Test.DEBUG){
+			if(Constants.DEBUG){
 				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
 			}
 			

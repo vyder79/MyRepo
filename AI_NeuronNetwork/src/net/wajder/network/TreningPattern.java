@@ -13,11 +13,14 @@ public class TreningPattern {
 	/** list of double values to set for inputs of neuron */
 	ArrayList<Double> inputList = new ArrayList<Double>();
 	
-	/** list of the outputs for specified input list */
-	ArrayList<Double> outputList = new ArrayList<Double>();
-	
 	/** value of the output for specified input list */
 	double output = 0;
+	
+	/** array of double - input */
+	private double[] inputArray;
+	
+	/** array of double - output */
+	private double[] outputArray;
 	
 	/**
 	 * constructors
@@ -30,10 +33,9 @@ public class TreningPattern {
 		this.output = output;
 	}
 
-	public TreningPattern(ArrayList<Double> inputList, ArrayList<Double> outputList) {
-		super();
-		this.inputList = inputList;
-		this.outputList = outputList;
+	public TreningPattern(double[] inputArray, double[] outputArray) {
+		this.inputArray = inputArray;
+		this.outputArray = outputArray;
 	}
 
 	// getters and seters
@@ -53,12 +55,20 @@ public class TreningPattern {
 		this.output = output;
 	}
 
-	public ArrayList<Double> getOutputList() {
-		return outputList;
+	public double[] getInputArray() {
+		return inputArray;
 	}
 
-	public void setOutputList(ArrayList<Double> outputList) {
-		this.outputList = outputList;
+	public void setInputArray(double[] inputArray) {
+		this.inputArray = inputArray;
+	}
+
+	public double[] getOutputArray() {
+		return outputArray;
+	}
+
+	public void setOutputArray(double[] outputArray) {
+		this.outputArray = outputArray;
 	}
 	
 
