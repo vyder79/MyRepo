@@ -22,7 +22,7 @@ public class Test {
 		 * iloœæ elementów tablicy okreœla iloœæ warstw sieci neuronowej,
 		 * wartoœci poszczególnych elementów okreœlaj¹ iloœæ neuronów w ka¿dej warstwie
 		 */
-		NeuronNetwork net = new NeuronNetwork(new int[] {4, 5, 4}, "my neural network 3rd edition");
+		NeuronNetwork net = new NeuronNetwork(new int[] {4, 2, 4}, "my neural network 3rd edition");
 		net.networkLearning(treningPatterns);
 		
 		System.out.println("\r\n********************************\r\nParametry:");
