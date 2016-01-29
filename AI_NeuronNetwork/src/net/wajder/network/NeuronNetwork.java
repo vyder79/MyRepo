@@ -90,7 +90,9 @@ public class NeuronNetwork {
 				this.recalculateWeights();
 			}		
 			iterations++;
-			System.out.println(meanSquareError);
+			if (Constants.DEBUG) {
+				System.out.println(meanSquareError);
+			}
 		}
 		
 		System.out.println(this);
