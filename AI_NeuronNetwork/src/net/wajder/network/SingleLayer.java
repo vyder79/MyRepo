@@ -34,7 +34,7 @@ public class SingleLayer implements Serializable {
 		for (Neuron n : this.neurons) {
 			out += n.toStringOutString();
 		}
-		out += "]";
+		out += "\r\n]";
 		return out;
 	}
 

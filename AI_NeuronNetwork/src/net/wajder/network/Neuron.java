@@ -120,11 +120,24 @@ public class Neuron implements Serializable {
 	}
 	
 	public void toStringOut(){
-		System.out.print(this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error);
+		String weights = "[weights: ";
+		for (Double w : this.weights) {
+			weights += String.format("%.8f", w);
+			weights += ",";
+		}
+		weights += "] ";
+		System.out.print(this.description + " " + weights + " out = " + String.format("%.8f",this.out) + " / err = " + String.format("%.8f",this.error));
 	}
 	
 	public String toStringOutString(){
-		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error;
+		String weights = "[weights: ";
+		for (Double w : this.weights) {
+			weights += String.format("%.8f", w);
+			weights += ", ";
+		}
+		weights += "] ";
+		//return "\r\n " + this.description + " " + weights + " out = " + String.format("%.8f",this.out) + " / err = " + String.format("%.8f",this.error);
+		return "\r\n " + this.description + " " + weights;
 	}
 	
 	public String toStringOutNeuronOutputRounded(){
@@ -133,7 +146,7 @@ public class Neuron implements Serializable {
 	}
 	
 	public String toStringOutNeuronOutput(){
-		return " " + this.out;
+		return " " + String.format("%.8f", this.out);
 	}
 
 	/**

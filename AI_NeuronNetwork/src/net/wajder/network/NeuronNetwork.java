@@ -100,7 +100,7 @@ public class NeuronNetwork implements Serializable {
 		}
 		
 		System.out.println(this);
-		System.out.println("\r\n[meanSquareError: " + meanSquareError + "] after "+iterations+" iterations");
+		System.out.println("\r\n[meanSquareError: " + String.format("%.8f", meanSquareError) + "] after "+iterations+" iterations");
 	}
 	
 	/*
@@ -281,7 +281,7 @@ public class NeuronNetwork implements Serializable {
 	
 	public String output(){ // tylko wyjœcia neuronów
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
-			String out = "\r\n hidden layers:\r\n";
+			String out = "\r\n hidden layers outs:\r\n";
 			for (int l = 1; l < this.neuronNetwork.size()-1; l++) {
 				ArrayList<Neuron> neurons = this.neuronNetwork.get(l).getNeurons();
 				for (Neuron n : neurons){
@@ -290,10 +290,11 @@ public class NeuronNetwork implements Serializable {
 				out += "\r\n";
 			}
 
-			out += "output layer:\r\n";
+			out += "output layer outs:\r\n";
 			ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
 			for (Neuron n : neurons2){
-				out += n.toStringOutNeuronOutputRounded();
+				//out += n.toStringOutNeuronOutputRounded();
+				out += n.toStringOutNeuronOutput();
 			}
 			return out + "\r\n";
 		}
