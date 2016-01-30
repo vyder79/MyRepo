@@ -1,4 +1,5 @@
 package net.wajder.network;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -7,7 +8,10 @@ import java.util.Random;
  * 
  * @author vyder
  */
-public class NeuronNetwork {
+public class NeuronNetwork implements Serializable {
+
+	private static final long serialVersionUID = -8088643370245104127L;
+	
 	private ArrayList<SingleLayer> neuronNetwork;
 	private String descrption;
 	private int bias;

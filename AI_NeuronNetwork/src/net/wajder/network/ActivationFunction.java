@@ -1,8 +1,11 @@
 package net.wajder.network;
+
+import java.io.Serializable;
+
 /**
  * @author vyder
  */
-public class ActivationFunction {
+public class ActivationFunction implements Serializable {
 	
 	private double beta = 2.0;
 	private final double e = Math.E;

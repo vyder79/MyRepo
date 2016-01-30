@@ -1,12 +1,14 @@
 package net.wajder.network;
 
+import java.io.Serializable;
+
 /**
  * Class with constants used in AI project
  * 
  * @author vyder
  *
  */
-public class Constants {
+public class Constants implements Serializable {
 	
 	// when TRUE, additional data is shown when computing weights
 	final static boolean DEBUG = false;
@@ -26,10 +28,33 @@ public class Constants {
 	/** value greater than this one display as 1 */
 	public static final double DISPLAY_AS_ONE = 0.9;
 	
+	
+	
 	/** number of input double values in trening pattern - number of neuron inputs */
 	public static final int HOW_MANY_PATTERN_ELEMENTS = 64;
 	
 	/** number of trening patterns to generate in NeuronTreningList class */
 	public static final int HOW_MANY_TRENING_PATTERNS = 30;
-
+	
+	
+	
+	/** czy uczenie sieci czy wczytanie zapisanej wyuczonej z pliku */
+	public static final boolean LEARN = true;
+	
+	/** czy zapisanie nauczonej sieci do pliku */
+	public static final boolean SAVE = true;
+	
+	
+	
+	/** œcie¿ka zapisu/odczytu */
+	public static final String COMMON_PATH = "D:\\NeuronNetworkFiles\\network";
+	
+	/** rozszerzenie pliku */
+	public static final String EXTENSION = ".dat";
+	
+	/** œcie¿ka zapisu/odczytu sieci neuronowej */
+	public static final String PATH_TO_NETWORK_FILE = COMMON_PATH + EXTENSION;
+	
+	/** œcie¿ka zapisu/odczytu sieci neuronowej jako historia */
+	public static final String PATH_TO_NETWORK_FILE_WITH_TIME = COMMON_PATH + System.currentTimeMillis() + EXTENSION;
 }

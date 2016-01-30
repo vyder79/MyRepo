@@ -1,4 +1,5 @@
 package net.wajder.network;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,7 +10,7 @@ import java.util.Random;
  * @author vyder
  *
  */
-public class Neuron {
+public class Neuron implements Serializable {
 	
 	/** list of neuron weights */
 	private ArrayList<Double> weights = new ArrayList<>();

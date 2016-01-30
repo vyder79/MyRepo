@@ -1,4 +1,5 @@
 package net.wajder.network;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @author vyder
  *
  */
-public class SingleLayer {
+public class SingleLayer implements Serializable {
 	
 	private ArrayList<Neuron> neurons;
 	
