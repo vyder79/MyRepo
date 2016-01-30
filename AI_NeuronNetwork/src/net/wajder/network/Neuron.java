@@ -126,8 +126,13 @@ public class Neuron {
 		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error;
 	}
 	
+	public String toStringOutNeuronOutputRounded(){
+		double t = this.out < Constants.DISPLAY_AS_ZERO ? 0 : this.out > Constants.DISPLAY_AS_ONE ? 1 : this.out;
+		return " " + t;
+	}
+	
 	public String toStringOutNeuronOutput(){
-		return " " + " " + this.out;
+		return " " + this.out;
 	}
 
 	/**

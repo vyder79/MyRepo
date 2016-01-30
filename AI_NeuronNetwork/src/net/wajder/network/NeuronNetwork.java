@@ -136,20 +136,45 @@ public class NeuronNetwork {
 		double delta = 0d;
 		int counter = 0;
 		
+		//ostatnia warstwa sieci neuronowej
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
 			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
 			counter++;
 		}
 		
-		int l = 0; // numer wagi
-		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
-			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
-				delta += nlast.getError()*nlast.getWeights().get(l);
+		// pozosta³ê warstwy poza wejsciow¹
+		for (int currentLayerNumber = layer; currentLayerNumber > 2; currentLayerNumber--) {
+			int l = 0; // numer wagi
+			for (Neuron n : this.neuronNetwork.get(currentLayerNumber - 2).getNeurons()) {
+				for (Neuron neuronFromPrevLayer : this.neuronNetwork.get(currentLayerNumber - 1).getNeurons()) {
+					delta += neuronFromPrevLayer.getError()*neuronFromPrevLayer.getWeights().get(l);
+				}
+				n.setError(delta*(n.getOut()*(1-n.getOut())));
+				l++;
 			}
-			n.setError(delta*(n.getOut()*(1-n.getOut())));
-			l++;
 		}
 	}
+	
+//	public void countErrors(double[] outputVector) {
+//		
+//		int layer = this.neuronNetwork.size();
+//		double delta = 0d;
+//		int counter = 0;
+//		
+//		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
+//			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
+//			counter++;
+//		}
+//		
+//		int l = 0; // numer wagi
+//		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
+//			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
+//				delta += nlast.getError()*nlast.getWeights().get(l);
+//			}
+//			n.setError(delta*(n.getOut()*(1-n.getOut())));
+//			l++;
+//		}
+//	}
 	
 	/*
 	 * obliczanie b³êdu œredniokwadratowego dla podanego wektora wejœciowego
@@ -252,16 +277,19 @@ public class NeuronNetwork {
 	
 	public String output(){ // tylko wyjœcia neuronów
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
-			String out = "\r\n hidden layer:"; // warstwa ukryta
-			ArrayList<Neuron> neurons = this.neuronNetwork.get(this.neuronNetwork.size() - 2).getNeurons();
-			for (Neuron n : neurons){
-				out += n.toStringOutNeuronOutput();
+			String out = "\r\n hidden layers:\r\n";
+			for (int l = 1; l < this.neuronNetwork.size()-1; l++) {
+				ArrayList<Neuron> neurons = this.neuronNetwork.get(l).getNeurons();
+				for (Neuron n : neurons){
+					out += n.toStringOutNeuronOutput();
+				}
+				out += "\r\n";
 			}
 
-			out += "\r\n output layer:"; // warstwa wyjœciowa
+			out += "output layer:\r\n";
 			ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
 			for (Neuron n : neurons2){
-				out += n.toStringOutNeuronOutput();
+				out += n.toStringOutNeuronOutputRounded();
 			}
 			return out + "\r\n";
 		}
