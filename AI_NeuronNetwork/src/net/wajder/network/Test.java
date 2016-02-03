@@ -54,7 +54,7 @@ public class Test {
 			}
 		}
 		
-		System.out.println("\r\n********************************\r\nParametry:");
+		System.out.println("\r\n********************************\r\nParameters:");
 		System.out.println("ERROR_VALUE (stop): " + Constants.ERROR_VALUE);
 		System.out.println("EPSILON : " + Constants.EPSILON);
 		System.out.println("BIAS: " + Constants.BIAS);
