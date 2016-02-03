@@ -1,35 +1,20 @@
-package net.wajder.network;
+package net;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * List of single layers of neurons -> NETWORK
- * 
- * @author vyder
- *
- */
 public class NeuronNetwork {
 	private ArrayList<SingleLayer> neuronNetwork;
 	private String descrption;
 	private int bias;
 	
 	private final int BIAS = 1;
-	
-	/**
-	 * @param neuronNetwork
-	 * @param description
-	 */
+
 	public NeuronNetwork(ArrayList<SingleLayer> neuronNetwork, String description) {
 		this.descrption = description;
 		this.neuronNetwork = neuronNetwork;
 		this.bias = BIAS;
 	}
-	
-	
-	/**
-	 * @param layersDesc
-	 * @param description
-	 */
+
 	public NeuronNetwork(int[] layersDesc, String description){
 		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
 		
@@ -48,7 +33,6 @@ public class NeuronNetwork {
 					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
 				listOfLayers.add(SingleLayer);
 				
 			} else { // kolejne warstwy
@@ -57,14 +41,12 @@ public class NeuronNetwork {
 				Layer.clear();
 				for (int j=0; j<layersDesc[layer]; j++) {
 					weights.clear();
-					//for (int i=0; i<layersDesc[layer-1]; i++) {
 					for (int i=0; i<layersDesc[layer-1]+1; i++) { // jedna waga wiêcej dla biasu
 						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
 					}
 					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
 				}
 				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
-				//SingleLayer.toStringOut();
 				listOfLayers.add(SingleLayer);
 			}
 			
@@ -74,11 +56,7 @@ public class NeuronNetwork {
 		this.neuronNetwork = listOfLayers;
 		this.bias = BIAS;
 	}
-	
-	
-	/*
-	 * lets get started
-	 */
+
 	public void work(int[] inputVector) {
 		
 		ArrayList<Double> outs = new ArrayList<Double>();
@@ -115,23 +93,16 @@ public class NeuronNetwork {
 		int counter = 0;
 		
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
-			//n.setError((outputVector[counter] - n.getOut())*(n.getOut()*(1-n.getOut())));
-			//////n.setError((n.getWeightedSum()*(1-n.getWeightedSum()) * (outputVector[counter]-n.getOut())));
-			//n.setError(outputVector[counter]-n.getOut());
 			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
-			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			counter++;
 		}
 		
 		int l = 0; // numer wagi
 		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
 			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
-				//delta += nlast.getOut()*nlast.getWeights().get(l);
 				delta += nlast.getError()*nlast.getWeights().get(l);
 			}
 			n.setError(delta*(n.getOut()*(1-n.getOut())));
-			//n.setError(delta*(n.getWeightedSum()*(1-n.getWeightedSum())));
-			//System.out.println(n.getDescription() + " err: " + n.getError() + " out: " + n.getOut() + " weightedSum: " + n.getWeightedSum());
 			l++;
 		}
 	}
@@ -178,18 +149,10 @@ public class NeuronNetwork {
 		for (Neuron n : neurons) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_1.get(i).getOut());
 				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
-				//Random rand = new Random();
-				//double epsilon = rand.nextDouble() / 100;
-				//newWeights.add(n.getWeights().get(i) + (epsilon * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
-				//newWeights.add(12d);
 			}
-			//System.out.println("\r\n" + n.getDescription());
-			//System.out.println("before " + n.getWeights());
 			n.getWeights().clear();
 			n.setWeights(newWeights);
-			//System.out.println("after " + n.getWeights());
 		}
 		
 		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers-3); // pierwsza warstwa
@@ -198,15 +161,10 @@ public class NeuronNetwork {
 		for (Neuron n : neurons_1) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				//newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * neurons_2.get(i).getOut());
 				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_2.get(i).getOut())  );
-				//newWeights.add(12d);
 			}
-			//System.out.println("\r\n" + n.getDescription());
-			//System.out.println("before " + n.getWeights());
 			n.getWeights().clear();
 			n.setWeights(newWeights);
-			//System.out.println("after " + n.getWeights());
 		}
 		
 	}
@@ -258,48 +216,6 @@ public class NeuronNetwork {
 
 	public void setBias(int bias) {
 		this.bias = bias;
-	}
-	
-	/** *****************************************************
-	 * 
-	 * main method to count output (MADALINE)
-	 * 
-	 *********************************************************/
-	public String checkLetter(ArrayList<Integer> inputList){
-		//normalizacja
-		int ones = 0;
-		ArrayList<Double> normalizedInputList = new ArrayList<>();
-		// policzenie jedynek w literze
-		for (Integer l : inputList){
-			if (l == 1) {
-				ones++;
-			}
-		}
-		System.out.println("wektor wejœciowy: " + inputList + " jedynki:" + ones);
-		
-		// zamiana jedynek na znormalizowan¹ wartoœæ
-		for (Integer l : inputList){
-			if (l == 1) {
-				normalizedInputList.add(1/Math.sqrt(ones));
-			} else {
-				normalizedInputList.add(0d);
-			}
-		}
-		
-		System.out.println("obliczanie:");
-		
-		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); //neurony rozpoznaj¹ce litery
-		ArrayList<Double> resultAfterLastLayer = new ArrayList<>();
-		for (Neuron n : sl) {
-			double similarity = n.activate(normalizedInputList);
-			resultAfterLastLayer.add(similarity);
-			if(Test.DEBUG){
-				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
-			}
-			
-		}
-		
-		return resultAfterLastLayer.toString();
 	}
 	
 }

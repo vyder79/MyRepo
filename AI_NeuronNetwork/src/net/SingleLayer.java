@@ -1,12 +1,6 @@
-package net.wajder.network;
+package net;
 import java.util.ArrayList;
 
-/**
- * Single layer of neurons
- * 
- * @author vyder
- *
- */
 public class SingleLayer {
 	
 	private ArrayList<Neuron> neurons;

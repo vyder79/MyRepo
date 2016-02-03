@@ -1,14 +1,7 @@
-package net.wajder.network;
+package net;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Class Neuron to compute output for given input signals
- * using list of weights for every input and activation function.
- * 
- * @author vyder
- *
- */
 public class Neuron {
 	
 	/** list of neuron weights */
@@ -51,29 +44,17 @@ public class Neuron {
 		this.description = description;
 		this.aFunction = aFunction;
 	}
-	
-	/**
-	 *  learned neuron
-	 *  
-	 * @param inputs
-	 * @return
-	 */
+
 	public double activate(ArrayList<Double> inputs){
 		double z = 0;
 		for (int i = 0; i < inputs.size(); i++) {
 			z += inputs.get(i) * this.weights.get(i);
 		}
 		this.weightedSum = z;
-		//System.out.println("neuron weighted sum = " + this.weightedSum);
 		this.out = aFunction.activate(z);
 		return this.out;
 	}
-	
-	/**
-	 *  set random weights at the start of learning
-	 *  
-	 * @param tp - trening pattern
-	 */
+
 	public void setRandomWeights(TreningPattern tp) {
 		setRandomWeights(tp.getInputList(), tp.getOutput());
 	}
@@ -93,14 +74,7 @@ public class Neuron {
 		}
 		this.weights.add((output - weightsSum) / inputData.get(count));
 	}
-	
-	/**
-	 *  learning using backward error propagation
-	 *  
-	 * @param tp
-	 * @param epsilon
-	 * @return
-	 */
+
 	public double backwardErrorPropagation(TreningPattern tp, double epsilon) {
 		return backwardErrorPropagation(tp.getInputList(), tp.getOutput(), epsilon);
 	}
@@ -120,20 +94,17 @@ public class Neuron {
 	}
 	
 	public void toStringOut(){
-		System.out.print(this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error);
+		System.out.print(this.description + " " + this.weights.toString());
 	}
 	
 	public String toStringOutString(){
-		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out + " / err = " + this.error;
+		return "\r\n " + this.description + " " + this.weights.toString() + " = " + this.out;
 	}
 	
 	public String toStringOutNeuronOutput(){
-		return " " + " " + this.out;
+		return " " + this.out;
 	}
 
-	/**
-	 *  getters and setters
-	 */
 	public ArrayList<Double> getWeights() {
 		return weights;
 	}
