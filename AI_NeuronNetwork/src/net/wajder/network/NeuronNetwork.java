@@ -94,9 +94,9 @@ public class NeuronNetwork implements Serializable {
 				this.recalculateWeights();
 			}		
 			iterations++;
-			if (Constants.DEBUG) {
-				System.out.println(meanSquareError);
-			}
+			//if (Constants.DEBUG) {
+				if (iterations % 100000 == 0) System.out.println(meanSquareError);
+			//}
 		}
 		
 		System.out.println(this);

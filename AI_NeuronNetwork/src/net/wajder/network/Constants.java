@@ -17,7 +17,7 @@ public class Constants implements Serializable {
 	public static final double ERROR_VALUE = 0.01;
 	
 	/** small number needs to backward error propagation learning */
-	public static final double EPSILON = 0.01;
+	public static final double EPSILON = 0.05;
 	
 	/** Additional BIAS neuron */
 	public static final int BIAS = 1;
