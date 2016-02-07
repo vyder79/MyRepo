@@ -1,8 +1,6 @@
 package net.wajder.game;
 
 import java.awt.event.KeyEvent;
-
-import net.wajder.game.images.*;
 import java.util.ArrayList;
 
 public class Craft extends Sprite {

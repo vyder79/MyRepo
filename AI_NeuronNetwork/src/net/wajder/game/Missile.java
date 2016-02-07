@@ -1,7 +1,5 @@
 package net.wajder.game;
 
-import net.wajder.game.images.*;
-
 public class Missile extends Sprite {
 
     private final int BOARD_WIDTH = 390;

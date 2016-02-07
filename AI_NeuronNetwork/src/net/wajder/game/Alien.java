@@ -1,7 +1,5 @@
 package net.wajder.game;
 
-import net.wajder.game.images.*;
-
 public class Alien extends Sprite {
 
     private final int INITIAL_X = 400;
