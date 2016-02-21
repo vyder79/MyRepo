@@ -146,7 +146,7 @@ public class Board extends JPanel implements ActionListener {
         updateCraft();
         updateMissiles();
         updateAliens();
-        
+        autoMoving();
         checkCollisions();
         addPointsWhenPassedAlien();
         repaint();
@@ -241,6 +241,18 @@ public class Board extends JPanel implements ActionListener {
 				points += PASS_ALIEN;
 			}
 		}
+    }
+    
+    /**
+     * Sterowanie za pomoc¹ sieci neuronowej.Na wejœciu po³o¿enie oraz
+     * prêdkoœci obiektów na planszy, na wyjœciu sieci kierunek ruchu: 
+     * 1 = w dó³, -1 = w górê, 0 = brak ruchu.
+     */
+    private void autoMoving() {
+    	double moveX = 0.0;
+    	double moveY = 1.0;
+    	if (craft.getY() > 570) moveY = 0.0;
+    	//craft.moveCalculatedByNeuralNetwork(moveX, moveY);
     	
     }
     

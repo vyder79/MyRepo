@@ -70,6 +70,21 @@ public class Craft extends Sprite {
             dy = SPEED_Y;
         }
     }
+    
+    public void moveCalculatedByNeuralNetwork(double moveX, double moveY) {
+
+        if (moveY <= -0.5) {
+            dy = - SPEED_Y;
+        }
+        
+        if (moveY >= -0.5 && moveY <= 0.5) {
+            dy = 0;
+        }
+
+        if (moveY >= 0.5) {
+            dy = SPEED_Y;
+        }
+    }
 
     public void fire() {
     	if (missilesToUse > 0) {
