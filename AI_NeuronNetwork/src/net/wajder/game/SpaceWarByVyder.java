@@ -3,9 +3,11 @@ package net.wajder.game;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
-public class CollisionEx extends JFrame {
+public class SpaceWarByVyder extends JFrame {
 
-    public CollisionEx() {
+	private static final long serialVersionUID = -6422686963415957523L;
+
+	public SpaceWarByVyder() {
         
         initUI();
     }
@@ -17,7 +19,7 @@ public class CollisionEx extends JFrame {
         setResizable(false);
         pack();
         
-        setTitle("Collision");
+        setTitle("SpaceWar by vyder");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -27,7 +29,7 @@ public class CollisionEx extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                CollisionEx ex = new CollisionEx();
+                SpaceWarByVyder ex = new SpaceWarByVyder();
                 ex.setVisible(true);
             }
         });

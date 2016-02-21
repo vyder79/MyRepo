@@ -23,21 +23,37 @@ public class Board extends JPanel implements ActionListener {
     private boolean ingame;
     private final int ICRAFT_X = 40;
     private final int ICRAFT_Y = 60;
-    private final int B_WIDTH = 400;
-    private final int B_HEIGHT = 300;
-    private final int DELAY = 15;
+    private final int B_WIDTH = 800;
+    private final int B_HEIGHT = 600;
+    private final int DELAY = 10;
+    
+    private int points = 0;
+    private final int DESTROY_ALIEN = 10;
+    private final int CATCH_GIFT = 100;
+    private final int PASS_ALIEN = 1;
 
     private final int[][] pos = {
-        {2380, 29}, {2500, 59}, {1380, 89},
-        {780, 109}, {580, 139}, {680, 239},
-        {790, 259}, {760, 50}, {790, 150},
-        {980, 209}, {560, 45}, {510, 70},
-        {930, 159}, {590, 80}, {530, 60},
-        {940, 59}, {990, 30}, {920, 200},
-        {900, 259}, {660, 50}, {540, 90},
-        {810, 220}, {860, 20}, {740, 180},
-        {820, 128}, {490, 170}, {700, 30}
+    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
+    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
+    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()}
+//    	  {2380, 29}, {2500, 59}, {1380, 89},
+//        {780, 109}, {580, 139}, {680, 239},
+//        {790, 259}, {760, 50}, {790, 150},
+//        {980, 209}, {560, 45}, {510, 70},
+//        {930, 159}, {590, 80}, {530, 60},
+//        {940, 59}, {990, 30}, {920, 200},
+//        {900, 259}, {660, 50}, {540, 90},
+//        {810, 220}, {860, 20}, {740, 180},
+//        {820, 128}, {490, 170}, {700, 30}
     };
+    
+    private int getRandX() {
+    	return (int) (Math.random() * 1000 + 800);
+    }
+    
+    private int getRandY() {
+    	return (int) (Math.random() * 600 /10 *10); // ustawione co 10 px
+    }
 
     public Board() {
 
@@ -88,8 +104,7 @@ public class Board extends JPanel implements ActionListener {
     private void drawObjects(Graphics g) {
 
         if (craft.isVisible()) {
-            g.drawImage(craft.getImage(), craft.getX(), craft.getY(),
-                    this);
+            g.drawImage(craft.getImage(), craft.getX(), craft.getY(), this);
         }
 
         ArrayList<Missile> ms = craft.getMissiles();
@@ -108,18 +123,19 @@ public class Board extends JPanel implements ActionListener {
 
         g.setColor(Color.WHITE);
         g.drawString("Aliens left: " + aliens.size(), 5, 15);
+        g.drawString("Points: " + points, 95, 15);
+        g.drawString("Missiles: " + craft.getMissilesToUse(), 185, 15);
     }
 
     private void drawGameOver(Graphics g) {
 
-        String msg = "Game Over";
-        Font small = new Font("Helvetica", Font.BOLD, 14);
+        String msg = "You have " + points + " points :)";
+        Font small = new Font("Helvetica", Font.BOLD, 18);
         FontMetrics fm = getFontMetrics(small);
 
         g.setColor(Color.white);
         g.setFont(small);
-        g.drawString(msg, (B_WIDTH - fm.stringWidth(msg)) / 2,
-                B_HEIGHT / 2);
+        g.drawString(msg, (B_WIDTH - fm.stringWidth(msg)) / 2, B_HEIGHT / 2);
     }
 
     @Override
@@ -130,9 +146,9 @@ public class Board extends JPanel implements ActionListener {
         updateCraft();
         updateMissiles();
         updateAliens();
-
+        
         checkCollisions();
-
+        addPointsWhenPassedAlien();
         repaint();
     }
 
@@ -212,11 +228,22 @@ public class Board extends JPanel implements ActionListener {
                 if (r1.intersects(r2)) {
                     m.setVisible(false);
                     alien.setVisible(false);
+                    points += DESTROY_ALIEN;
                 }
             }
         }
     }
 
+    private void addPointsWhenPassedAlien() {
+		for (Alien alien : aliens) {
+			if (alien.passed) {
+				alien.passed = false;
+				points += PASS_ALIEN;
+			}
+		}
+    	
+    }
+    
     private class TAdapter extends KeyAdapter {
 
         @Override

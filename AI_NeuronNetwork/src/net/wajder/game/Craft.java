@@ -8,6 +8,12 @@ public class Craft extends Sprite {
     private int dx;
     private int dy;
     private ArrayList<Missile> missiles;
+    
+    /** iloœæ rakiet na wyposa¿eniu statku */
+    private int missilesToUse = 5;
+    
+    private final int SPEED_X = 1;
+    private final int SPEED_Y = 1;
 
     public Craft(int x, int y) {
         super(x, y);
@@ -49,24 +55,27 @@ public class Craft extends Sprite {
         }
 
         if (key == KeyEvent.VK_LEFT) {
-            dx = -1;
+            dx = - SPEED_X;
         }
 
         if (key == KeyEvent.VK_RIGHT) {
-            dx = 1;
+            dx = SPEED_X;
         }
 
         if (key == KeyEvent.VK_UP) {
-            dy = -1;
+            dy = - SPEED_Y;
         }
 
         if (key == KeyEvent.VK_DOWN) {
-            dy = 1;
+            dy = SPEED_Y;
         }
     }
 
     public void fire() {
-        missiles.add(new Missile(x + width, y + height / 2));
+    	if (missilesToUse > 0) {
+    		missiles.add(new Missile(x + width, y));
+    		missilesToUse--;
+    	}
     }
 
     public void keyReleased(KeyEvent e) {
@@ -89,4 +98,12 @@ public class Craft extends Sprite {
             dy = 0;
         }
     }
+
+	public int getMissilesToUse() {
+		return missilesToUse;
+	}
+
+	public void setMissilesToUse(int missilesToUse) {
+		this.missilesToUse = missilesToUse;
+	}
 }
