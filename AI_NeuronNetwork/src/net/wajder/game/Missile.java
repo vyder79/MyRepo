@@ -13,7 +13,7 @@ public class Missile extends Sprite {
     
     private void initMissile() {
         
-        loadImage("d://game_images/missile2.jpg");
+        loadImage("d://game_images/missile2.png");
         getImageDimensions();        
     }
 

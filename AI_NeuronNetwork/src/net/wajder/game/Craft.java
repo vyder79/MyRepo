@@ -24,7 +24,7 @@ public class Craft extends Sprite {
     private void initCraft() {
         
         missiles = new ArrayList<>();
-        loadImage("d://game_images/craft.png");
+        loadImage("d://game_images/craft2.png");
         getImageDimensions();
     }
 

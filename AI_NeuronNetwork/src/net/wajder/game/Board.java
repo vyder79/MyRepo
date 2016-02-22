@@ -20,6 +20,7 @@ public class Board extends JPanel implements ActionListener {
     private Timer timer;
     private Craft craft;
     private ArrayList<Alien> aliens;
+    private ArrayList<Gift> gifts;
     private boolean ingame;
     private final int ICRAFT_X = 40;
     private final int ICRAFT_Y = 60;
@@ -28,27 +29,26 @@ public class Board extends JPanel implements ActionListener {
     private final int DELAY = 10;
     
     private int points = 0;
-    private final int DESTROY_ALIEN = 10;
-    private final int CATCH_GIFT = 100;
-    private final int PASS_ALIEN = 1;
+    private final int DESTROY_ALIEN_POINTS = 10;
+    private final int CATCH_GIFT_POINTS = 100;
+    private final int PASS_ALIEN_POINTS = 1;
 
     private final int[][] pos = {
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()}
-//    	  {2380, 29}, {2500, 59}, {1380, 89},
-//        {780, 109}, {580, 139}, {680, 239},
-//        {790, 259}, {760, 50}, {790, 150},
-//        {980, 209}, {560, 45}, {510, 70},
-//        {930, 159}, {590, 80}, {530, 60},
-//        {940, 59}, {990, 30}, {920, 200},
-//        {900, 259}, {660, 50}, {540, 90},
-//        {810, 220}, {860, 20}, {740, 180},
-//        {820, 128}, {490, 170}, {700, 30}
     };
+    
+    private final int[][] posG = {
+        	{getRandXGift(), getRandY()},{getRandXGift(), getRandY()}, {getRandXGift(), getRandY()}
+        };
     
     private int getRandX() {
     	return (int) (Math.random() * 1000 + 800);
+    }
+    
+    private int getRandXGift() {
+    	return (int) (Math.random() * 3000 + 2000);
     }
     
     private int getRandY() {
@@ -72,6 +72,7 @@ public class Board extends JPanel implements ActionListener {
         craft = new Craft(ICRAFT_X, ICRAFT_Y);
 
         initAliens();
+        initGifts();
 
         timer = new Timer(DELAY, this);
         timer.start();
@@ -82,6 +83,14 @@ public class Board extends JPanel implements ActionListener {
 
         for (int[] p : pos) {
             aliens.add(new Alien(p[0], p[1]));
+        }
+    }
+    
+    public void initGifts() {
+        gifts = new ArrayList<>();
+
+        for (int[] p : posG) {
+            gifts.add(new Gift(p[0], p[1]));
         }
     }
 
@@ -120,6 +129,12 @@ public class Board extends JPanel implements ActionListener {
                 g.drawImage(a.getImage(), a.getX(), a.getY(), this);
             }
         }
+        
+        for (Gift a : gifts) {
+            if (a.isVisible()) {
+                g.drawImage(a.getImage(), a.getX(), a.getY(), this);
+            }
+        }
 
         g.setColor(Color.WHITE);
         g.drawString("Aliens left: " + aliens.size(), 5, 15);
@@ -146,6 +161,7 @@ public class Board extends JPanel implements ActionListener {
         updateCraft();
         updateMissiles();
         updateAliens();
+        updateGifts();
         autoMoving();
         checkCollisions();
         addPointsWhenPassedAlien();
@@ -200,6 +216,19 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
+    
+    private void updateGifts() {
+
+        for (int i = 0; i < gifts.size(); i++) {
+
+            Gift a = gifts.get(i);
+            if (a.isVisible()) {
+                a.move();
+            } else {
+                gifts.remove(i);
+            }
+        }
+    }
 
     public void checkCollisions() {
 
@@ -212,6 +241,15 @@ public class Board extends JPanel implements ActionListener {
                 craft.setVisible(false);
                 alien.setVisible(false);
                 ingame = false;
+            }
+        }
+        
+        for (Gift gift : gifts) {
+            Rectangle r4 = gift.getBounds();
+
+            if (r3.intersects(r4)) {
+                gift.setVisible(false);
+                points += CATCH_GIFT_POINTS;
             }
         }
 
@@ -228,7 +266,7 @@ public class Board extends JPanel implements ActionListener {
                 if (r1.intersects(r2)) {
                     m.setVisible(false);
                     alien.setVisible(false);
-                    points += DESTROY_ALIEN;
+                    points += DESTROY_ALIEN_POINTS;
                 }
             }
         }
@@ -238,7 +276,7 @@ public class Board extends JPanel implements ActionListener {
 		for (Alien alien : aliens) {
 			if (alien.passed) {
 				alien.passed = false;
-				points += PASS_ALIEN;
+				points += PASS_ALIEN_POINTS;
 			}
 		}
     }
