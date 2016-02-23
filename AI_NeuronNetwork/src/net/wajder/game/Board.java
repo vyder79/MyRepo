@@ -52,7 +52,7 @@ public class Board extends JPanel implements ActionListener {
     }
     
     private int getRandY() {
-    	return (int) (Math.random() * 600 /10 *10); // ustawione co 10 px
+    	return ((int)(Math.random() *20) *30); // ustawione co 30 px
     }
 
     public Board() {

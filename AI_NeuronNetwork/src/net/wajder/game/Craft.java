@@ -35,10 +35,14 @@ public class Craft extends Sprite {
 
         if (x < 1) {
             x = 1;
+        } else if (x > 770) {
+        	x = 770;
         }
 
         if (y < 1) {
             y = 1;
+        } else if (y > 550) {
+        	y = 550;
         }
     }
 

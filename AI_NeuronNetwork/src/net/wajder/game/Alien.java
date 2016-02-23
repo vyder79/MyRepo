@@ -24,10 +24,19 @@ public class Alien extends Sprite {
 
         if (x < 0) {
             x = INITIAL_X;
-        	y = (int) (Math.random() * 580 /10 *10);
+        	y =  ((int)(Math.random() *20) *30);
         	passed = true;
         }
 
         x -= SPEED;
+        double move = Math.random();
+        if (move < 0.2) {
+        	y -= SPEED+1;
+        } else if (move > 0.8) {
+        	y += SPEED+1;
+        } else {
+        	// nie zmieniamy y
+        }
+ 
     }
 }
