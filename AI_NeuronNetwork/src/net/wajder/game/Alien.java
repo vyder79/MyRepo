@@ -31,9 +31,9 @@ public class Alien extends Sprite {
         x -= SPEED;
         double move = Math.random();
         if (move < 0.2) {
-        	y -= SPEED+1;
+        	y -= SPEED;
         } else if (move > 0.8) {
-        	y += SPEED+1;
+        	y += SPEED;
         } else {
         	// nie zmieniamy y
         }
