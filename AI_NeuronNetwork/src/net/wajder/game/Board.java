@@ -12,8 +12,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import net.wajder.network.TrainedNetwork;
 
 public class Board extends JPanel implements ActionListener {
 
@@ -24,17 +28,20 @@ public class Board extends JPanel implements ActionListener {
     private boolean ingame;
     private final int ICRAFT_X = 40;
     private final int ICRAFT_Y = 60;
-    private final int B_WIDTH = 800;
-    private final int B_HEIGHT = 600;
+    private final int B_WIDTH = 600;
+    private final int B_HEIGHT = 300;
     private final int DELAY = 10;
     
     private int points = 0;
     private final int DESTROY_ALIEN_POINTS = 10;
     private final int CATCH_GIFT_POINTS = 100;
     private final int PASS_ALIEN_POINTS = 1;
+    
+    private double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
+    private TrainedNetwork trainedNetwork = new TrainedNetwork();
+    
     private final int[][] pos = {
-    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()}
     };
@@ -44,7 +51,7 @@ public class Board extends JPanel implements ActionListener {
         };
     
     private int getRandX() {
-    	return (int) (Math.random() * 1000 + 800);
+    	return (int) (Math.random() * 1000 + 600);
     }
     
     private int getRandXGift() {
@@ -52,7 +59,7 @@ public class Board extends JPanel implements ActionListener {
     }
     
     private int getRandY() {
-    	return ((int)(Math.random() *20) *30); // ustawione co 30 px
+    	return ((int)(Math.random() *150) +30); // ustawione co 30 px
     }
 
     public Board() {
@@ -287,12 +294,49 @@ public class Board extends JPanel implements ActionListener {
      * 1 = w dó³, -1 = w górê, 0 = brak ruchu.
      */
     private void autoMoving() {
-    	double moveX = 0.0;
-    	double moveY = 1.0;
-    	if (craft.getY() > 570) moveY = 0.0;
-    	//craft.moveCalculatedByNeuralNetwork(moveX, moveY);
+    	int i = 0;
+    	double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    	this.positions = positions;
+    	positions[i] = craft.getX(); // 0
+    	positions[++i] = craft.getY(); // 1
+    	for (Sprite alien : aliens) {
+    		positions[++i] = alien.getX(); // 2, 4, 6, ...
+    		positions[++i] = alien.getY(); // 3, 5, 7, ...
+    	}
     	
+    	i = 13;
+    	for (Gift gift : gifts) {
+    		positions[++i] = gift.getX(); // 14, 16, 18
+    		positions[++i] = gift.getY(); // 15, 17, 19
+    	}
+    	
+    	System.out.println(Arrays.toString(this.positions));
+    	
+    	trainedNetwork.getNet().work(positions);
+    	
+    	System.out.println(Arrays.toString(trainedNetwork.getNet().calculatedOut()));
+    	
+    	//double moveX = 0.0;
+    	//double moveY = Math.random() * 2 - 1;
+    	//System.out.println(moveY);
+    	//if (craft.getY() > 270) moveY = 0.0;
+    	craft.moveCalculatedByNeuralNetwork(trainedNetwork.getNet().calculatedOut());
+    	
+    	/**
+    	[40, 51, 230, 552, 371, 134, 350, 525, 219, 57, 596, 240, 6, 142, 1714, 70, 94, 60, 1550, 39] 0.5
+    	[40, 149, 436, 553, 577, 150, 556, 515, 425, 54, 1, 96, 212, 161, 2126, 70, 506, 60, 1962, 39] 0
+    	[40, 195, 567, 558, 708, 153, 687, 507, 556, 60, 132, 100, 343, 144, 2388, 70, 768, 60, 2224, 39] 1
+    	*/
     }
+    
+//    public void keyPressed(KeyEvent e) {
+//
+//        int key = e.getKeyCode();
+//        
+//        if (key == KeyEvent.VK_BACK_SPACE) {
+//        	System.out.println("__" + Arrays.toString(this.positions));
+//        }
+//    }
     
     private class TAdapter extends KeyAdapter {
 

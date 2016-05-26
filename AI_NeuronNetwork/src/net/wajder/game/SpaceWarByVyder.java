@@ -3,12 +3,13 @@ package net.wajder.game;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
+import net.wajder.network.TrainedNetwork;
+
 public class SpaceWarByVyder extends JFrame {
 
 	private static final long serialVersionUID = -6422686963415957523L;
 
 	public SpaceWarByVyder() {
-        
         initUI();
     }
     

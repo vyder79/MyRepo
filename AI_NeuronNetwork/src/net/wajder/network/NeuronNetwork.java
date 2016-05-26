@@ -1,21 +1,25 @@
 package net.wajder.network;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
- * List of single layers of neurons -> NETWORK
+ * Implementacja sieci neuronowej list pojedynczych warst
  * 
- * @author vyder
  */
 public class NeuronNetwork implements Serializable {
 
 	private static final long serialVersionUID = -8088643370245104127L;
-	
+
 	private ArrayList<SingleLayer> neuronNetwork;
 	private String descrption;
 	private int bias;
-	
+
+	// Do Genetycznego Algorytmu Nauczania
+
+
 	/**
 	 * @param neuronNetwork
 	 * @param description
@@ -25,223 +29,554 @@ public class NeuronNetwork implements Serializable {
 		this.neuronNetwork = neuronNetwork;
 		this.bias = Constants.BIAS;
 	}
-	
-	
+
 	/**
 	 * @param layersDesc
 	 * @param description
 	 */
 	@SuppressWarnings("unchecked")
-	public NeuronNetwork(int[] layersDesc, String description){
+	public NeuronNetwork(int[] layersDesc, String description) {
 		ArrayList<SingleLayer> listOfLayers = new ArrayList<>();
-		
-		for (int layer = 0; layer < layersDesc.length; layer++){
+
+		for (int layer = 0; layer < layersDesc.length; layer++) {
 			ArrayList<Double> weights = new ArrayList<>();
 			ArrayList<Neuron> Layer = new ArrayList<>();
 			SingleLayer SingleLayer = new SingleLayer(Layer, "init layer");
 			Random rand = new Random();
-			
-			if (layer == 0) { // warstwa pierwsza ró¿ni siê od pozosta³ych
-				
+
+			if (layer == 0) { // warstwa pierwsza rï¿½ï¿½ni siï¿½ od pozostaï¿½ych
+
 				weights.clear();
 				Layer.clear();
 				weights.add(1d);
-				for (int j=0; j<layersDesc[layer]; j++){
-					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.LINEAR)));
+				for (int j = 0; j < layersDesc[layer]; j++) {
+					Layer.add(new Neuron((ArrayList<Double>) weights.clone(), "n_" + layer + "_" + j,
+							new ActivationFunction(ActivFuncEnum.LINEAR)));
 				}
-				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
+				SingleLayer = new SingleLayer(Layer, "layer[" + layer + "]");
 				listOfLayers.add(SingleLayer);
-				
-			} else { // kolejne warstwy
-				
+
+			} else { // kolejne warstwy /// TO by zostaï¿½o
+
 				weights.clear();
 				Layer.clear();
-				for (int j=0; j<layersDesc[layer]; j++) {
+				for (int j = 0; j < layersDesc[layer]; j++) {
 					weights.clear();
-					for (int i=0; i<layersDesc[layer-1] + 1; i++) { // jedna waga wiêcej dla biasu
-						weights.add(rand.nextDouble() - 0.5);  // zakres wag [-0.5 ; 0.5]
+					for (int i = 0; i < layersDesc[layer - 1] + 1; i++) { // jedna
+																			// waga
+																			// wiï¿½cej
+																			// dla
+																			// biasu
+						weights.add(rand.nextDouble() - 0.5); // zakres wag
+																// [-0.5 ; 0.5]
 					}
-					Layer.add(new Neuron((ArrayList<Double>)weights.clone(), "n_"+layer+"_"+j, new ActivationFunction(ActivFuncEnum.SIGMOID)));
+					Layer.add(new Neuron((ArrayList<Double>) weights.clone(), "n_" + layer + "_" + j,
+							new ActivationFunction(ActivFuncEnum.SIGMOID)));
 				}
-				SingleLayer = new SingleLayer(Layer, "layer["+layer+"]");
+				SingleLayer = new SingleLayer(Layer, "layer[" + layer + "]");
 				listOfLayers.add(SingleLayer);
 			}
-			
+
 		}
 		this.descrption = description;
 		this.neuronNetwork = listOfLayers;
 		this.bias = Constants.BIAS;
 	}
-	
-	
-	public void networkLearning(ArrayList<TreningPattern> treningPatterns){
-		
-		// wstêpne wyznaczenie b³êdu dla sieci
+
+//	public void test(ArrayList<TreningPattern> treningPatterns) {
+//		pop.przygotowaniePopulacjiPoczatkowej(65535, 16, 1, 22);
+//		setWeights(pop.getPopulacjaPoczatkowa().getFirst());
+//
+//		for (TreningPattern p : treningPatterns) {
+//			this.work(p.getInputArray());
+//			// blad(p);
+//			System.out.println(this);
+//
+//			int layer = this.neuronNetwork.size();
+//			SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+//			int neuronCount = sLayer.getNeurons().size();
+//
+//			for (Neuron n : sLayer.getNeurons()) {
+//				System.out.println(n.getOut());
+//			}
+//		}
+//
+//	}
+
+	public double blad(TreningPattern treningPatterns) {
+		double bladDlaWzorca = 0.0;
+
+		int layer = this.neuronNetwork.size();
+		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+		int neuronCount = sLayer.getNeurons().size();
+
+		int counter = treningPatterns.getOutputArray().length;
+
+		// System.out.println("WYJSCIE " +
+		// sLayer.getNeurons().get(0).getOut());
+		for (int i = 0; i < counter; i++) {
+			bladDlaWzorca += Math.abs(treningPatterns.getOutputArray()[i] - sLayer.getNeurons().get(i).getOut());
+		}
+		// System.out.println(treningPattern.getOutputArray()[0] + " - " +
+		// sLayer.getNeurons().get(0).getOut() + " = " + blad);
+
+		return bladDlaWzorca / counter;
+	}
+
+	public void networkLearning(ArrayList<TreningPattern> treningPatterns) {
+
+		// wstï¿½pne wyznaczenie bï¿½ï¿½du dla sieci
 		this.work(treningPatterns.get(0).getInputArray());
 		this.countErrors(treningPatterns.get(0).getOutputArray());
-		double meanSquareError = this.meanSquareError(treningPatterns.get(0).getInputArray());
-		this.recalculateWeights();
-		
-		
+		double meanSquareError = blad(treningPatterns.get(0));
+		this.recalculateWeights(); // metoda wstecznej propagacji bï¿½ï¿½du
+
 		long iterations = 0L;
-		while (meanSquareError > Constants.ERROR_VALUE && iterations < 100000000) {
+		while (Math.abs(meanSquareError) > Constants.ERROR_VALUE && iterations < 100000000) {
 			meanSquareError = 0d;
-			// TODO: nauka powinna za ka¿dym razem korzystaæ z innej kolejnoœci wzorców treningowych
-			for (TreningPattern tp : treningPatterns){
+			// TODO: nauka powinna za kaï¿½dym razem korzystaï¿½ z innej kolejnoï¿½ci
+			// wzorcï¿½w treningowych
+			for (TreningPattern tp : treningPatterns) {
 				this.work(tp.getInputArray());
 				this.countErrors(tp.getOutputArray());
-				meanSquareError += this.meanSquareError(tp.getInputArray());
+				// meanSquareError += this.meanSquareError(tp.getInputArray());
+				meanSquareError = blad(tp);
+				System.out.println("WZORZEC BLAD " + blad(tp));
 				this.recalculateWeights();
-			}		
+			}
 			iterations++;
-			//if (Constants.DEBUG) {
-				if (iterations % 100000 == 0) System.out.println(meanSquareError);
-			//}
+			if (Constants.DEBUG) {
+				System.out.println(meanSquareError);
+			}
 		}
-		
+
 		System.out.println(this);
-		System.out.println("\r\n[meanSquareError: " + String.format("%.8f", meanSquareError) + "] after "+iterations+" iterations");
+		System.out.println("\r\n[meanSquareError: " + String.format("%.8f", meanSquareError) + "] after " + iterations
+				+ " iterations");
+		for (TreningPattern tp : treningPatterns) {
+			this.work(tp.getInputArray());
+			int layer = this.neuronNetwork.size();
+			SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+			int neuronCount = sLayer.getNeurons().size();
+
+			for (Neuron n : sLayer.getNeurons()) {
+				System.out.println("WYJï¿½ï¿½IE Z SIECI " + n.getOut());
+			}
+		}
 	}
-	
+
+	/*
+	 * Nauczanie sici neuronowej za pomoca algorytmu genetycznego
+	 */
+//	public void genetickNetworkLearning(ArrayList<TreningPattern> treningPatterns) {
+//		double error = 0.0;
+//		int count = 0;
+//		double bladOgolny = 0.0;
+//
+//		// Pierwszy etap utworzenia populacji poczï¿½tkowej
+//		if (pop.getPopulacja().isEmpty()) {
+//			pop.przygotowaniePopulacjiPoczatkowej(260000, 18, 100, 22);
+//			//pop.przygotowaniePopulacjiPoczatkowej(130000, 17, 100, 11);
+//
+//			// Sprawdzenie kaï¿½dego chromosmu z osobna
+//			for (Chromosom ch : pop.getPopulacjaPoczatkowa()) {
+//				setWeights(ch);
+//				// Sprawdzenie kaï¿½dego wzorca
+//				for (TreningPattern p : treningPatterns) {
+//					this.work(p.getInputArray());
+//					error += this.blad(p);
+//				}
+//				// System.out.println("ERROR " + error);
+//				// System.out.println("ERROR / SIZE " + error /
+//				// treningPatterns.size());
+//				ch.setError(error / treningPatterns.size());
+//			}
+//
+//			// Wyznaczenie wartoï¿½ci funkcji przystosowania
+//			for (Chromosom ch : pop.getPopulacjaPoczatkowa()) {
+//				fn.wyznaczenie_wartoï¿½ci_funckji_przystosowania(ch, Constants.ERROR_VALUE);
+//			}
+//
+//			// for (Chromosom ch : pop.getPopulacjaPoczatkowa()) {
+//			// System.out.println("ERROR " + ch.getError() + " FN " +
+//			// ch.getFn());
+//			// }
+//
+//			/*
+//			 * znalezienie najlepszego osobnika z populacji
+//			 */
+//			setNajlepszy(najlepszy(pop.getPopulacjaPoczatkowa()));
+//
+//			// Przygotowanie Koï¿½a Ruletki i wylosowanie osobnikï¿½w do
+//			// dalszych
+//			// prac
+//
+//			k.koloRuletki(pop.getPopulacjaPoczatkowa());
+//			// System.out.println("Kolo Ruletki " +
+//			// k.getKoloRuletki().size());
+//
+//			// Podziaï¿½ wylosowanych osobnikï¿½w na pary
+//			m.podziaï¿½NaPary(k.getWylosowaneOsobniki());
+//
+//			// Utworzenie populacji potomkï¿½w z wylosowanych osobnikï¿½w
+//			m.metodyGenetyczne(84, 1, 15, m.getPary2());
+//
+//			// System.out.println(m.getPotomstwo().size());
+//
+//			// Zapisanie potomstaw jako nowej populacji do kolejnej iteracji
+//			// algorytmu
+//			pop.getPopulacja().clear();
+//			pop.setPopulacja(m.getPotomstwo());
+//			// m.getPotomstwo().clear();
+//			// System.out.println("POPULACJA SIZE " +
+//			// pop.getPopulacja().size());
+//		}
+//		while (najlepszy.getError() >= 0.01 && count <= 720) {
+//			// System.out.println("---------------");
+//			// Dekodowanie Wag na postaï¿½ dzisiï¿½tnï¿½
+//			for (Chromosom ch : pop.getPopulacja()) {
+//				ch.dekodowanieChromosomu();
+//			}
+//
+//			// Sprawdzenie kaï¿½dego chromosmu z osobna
+//			// System.out.println("POP " + pop.getPopulacja().size());
+//			for (Chromosom ch : pop.getPopulacja()) {
+//				setWeights(ch);
+//				error = 0.0;
+//				// Sprawdzenie kaï¿½dego wzorca
+//				for (TreningPattern p : treningPatterns) {
+//					this.work(p.getInputArray());
+//					// error += this.meanSquareError(p.getInputArray());
+//					// wyznaczenie bï¿½edu dla danego chromosmu i wszystkich
+//					// wzorcï¿½w uczï¿½cych
+//					error += this.blad(p);
+//				}
+//				// System.out.println("ERROR " + error);
+//				// System.out.println("ERROR / SIZE " + error /
+//				// treningPatterns.size());
+//				ch.setError(error / treningPatterns.size());
+//
+//				// error = 0.0;
+//			}
+//			// System.out.println("Kolejne POKOLENIE " + (sredniblad /
+//			// 100));
+//
+//			// Wyznaczenie wartoï¿½ci funkcji przystosowania
+//			for (Chromosom ch : pop.getPopulacja()) {
+//				fn.wyznaczenie_wartoï¿½ci_funckji_przystosowania(ch, Constants.ERROR_VALUE);
+//			//	System.out.println("FUNCKJA PRZYSTOSOWANIA " + ch.getFn() + "ERROR " + ch.getError());
+//			}
+//
+//			/*
+//			 * znalezienie najlepszego osobnika z populacji
+//			 */
+//			setNajlepszy(najlepszy(pop.getPopulacja()));
+//			//System.out.println("NAJ NAJ NAJ " + najlepszy.getError());
+//
+//			// System.out.println(pop.getPopulacja().size());
+//			// Przygotowanie Koï¿½a Ruletki i wylosowanie osobnikï¿½w do
+//			// dalszych
+//			// prac
+//
+//			// Czyszczenie
+//			// k.getKoloRuletki().clear();
+//			k.getWylosowaneOsobniki().clear();
+//			m.getPary2().clear();
+//
+//			k.koloRuletki(pop.getPopulacja());
+////			System.out.println("WYLOSOWANE OSOBNIKI " + k.getWylosowaneOsobniki().size());
+//			// for (Chromosom ch : k.getWylosowaneOsobniki()) {
+//			// System.out.println(ch.getFn() + "PRAWDOPODOBIENSTWO " +
+//			// ch.getPrawdopodobieï¿½stwoWyboru());
+//			// }
+//			// System.out.println("Najlepszy " + najlepszy.getError());
+//			// System.out.println("Kolo Ruletki " +
+//			// k.getKoloRuletki().size());
+//			// System.out.println("Wylosowane " +
+//			// k.getWylosowaneOsobniki().size());
+//			// Podziaï¿½ wylosowanych osobnikï¿½w na pary
+//			m.podziaï¿½NaPary(k.getWylosowaneOsobniki());
+//
+//			// Utworzenie populacji potomkï¿½w z wylosowanych osobnikï¿½w
+//			m.metodyGenetyczne(84, 1, 15, m.getPary2());
+//
+//			// System.out.println(m.getPotomstwo().size());
+//
+//			// Zapisanie potomstaw jako nowej populacji do kolejnej iteracji
+//			// algorytmu
+//			pop.getPopulacja().clear();
+//			pop.setPopulacja(m.getPotomstwo());
+////			System.out.println("POPULACJA NA KONIEC ETAPU " + pop.getPopulacja().size());
+//			// System.out.println(
+//			// "POPULACJA SIZE " + pop.getPopulacja().size() + " Potomstwo "
+//			// + m.getPotomstwo().size());
+//			count++;
+//		}
+//		System.out.println("Liczba EPOK " + count);
+//		System.out.println("NAJMNIEJSZY Bï¿½AD " + najlepszy.getError());
+//
+//		// }System.out.println(error);
+//
+//		// System.out.println(pop.getPopulacja().size());
+//		// setWeights();
+//
+//		// for (Chromosom ch : pop.getPopulacja()) {
+//		// setWeights(ch);
+//		// this.work(treningPatterns.get(0).getInputArray());
+//
+//		setWeights(najlepszy);
+//		for (
+//
+//		TreningPattern tp : treningPatterns)
+//
+//		{
+//			this.work(tp.getInputArray());
+//			System.out.println("!!!!!!!!!!!!!!!!");
+//			int layer = this.neuronNetwork.size();
+//			SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+//			int neuronCount = sLayer.getNeurons().size();
+//
+//			for (Neuron n : sLayer.getNeurons()) {
+//				System.out.println(n.getOut());
+//			}
+//		}
+//		for (Double d : najlepszy.getChromosomDec()) {
+//			System.out.println("WAGA " + d);
+//		}
+//
+//		// System.out.println("!!!!!!!!!!!!!!!!");
+//	}
+	// }
+
+//	public Chromosom najlepszy(LinkedList<Chromosom> populacja) {
+//		double best = 0.0;
+//		najlepszy = new Chromosom();
+//		for (Chromosom ch : populacja) {
+//			if (ch.getFn() > best) {
+//				best = ch.getFn();
+//				najlepszy.setFn(ch.getFn());
+//				najlepszy.setChromosomDec(ch.getChromosomDec());
+//				najlepszy.setError(ch.getError());
+//			}
+//		}
+//		setNajlepszy(najlepszy);
+////		System.out.println("NAJLEPSZY Z POKOLENIA " + najlepszy.getFn());
+//		return najlepszy;
+//	}
+
 	/*
 	 * lets get started
 	 */
 	public void work(double[] inputVector) {
 		ArrayList<Double> outs = new ArrayList<Double>();
-		
+
 		// warstwa 0
-		for (int i=0; i<inputVector.length; i++) {
+		for (int i = 0; i < inputVector.length; i++) {
 			outs.clear();
 			outs.add(inputVector[i]);
 			this.neuronNetwork.get(0).getNeurons().get(i).activate(outs);
 		}
-		
-		// pozosta³e warstwy
-		for (int l=1; l<this.neuronNetwork.size(); l++) {
+
+		// pozostaï¿½e warstwy
+		for (int l = 1; l < this.neuronNetwork.size(); l++) {
 			outs.clear();
-			// tworzymy wektor wejœciowy z wyjœæ poprzedniej warstwy
-			for (Neuron x : this.neuronNetwork.get(l-1).getNeurons()) {
+			// tworzymy wektor wejï¿½ciowy z wyjï¿½ï¿½ poprzedniej warstwy
+			for (Neuron x : this.neuronNetwork.get(l - 1).getNeurons()) {
 				outs.add(x.getOut());
 			}
-			outs.add(Double.parseDouble(Constants.BIAS+""));
-			// ka¿demu z neuronów podajemy wektor wejœciowy z wag poprzedniej warstwy
-			for (Neuron n : this.neuronNetwork.get(l).getNeurons()){
+			outs.add(Double.parseDouble(Constants.BIAS + ""));
+			// kaï¿½demu z neuronï¿½w podajemy wektor wejï¿½ciowy z wag poprzedniej
+			// warstwy
+			for (Neuron n : this.neuronNetwork.get(l).getNeurons()) {
 				n.activate(outs);
 			}
 		}
 	}
-	
+
 	/*
-	 * obliczenie b³êdu dla ka¿dgo neurona w sieci
+	 * obliczenie bï¿½ï¿½du dla kaï¿½dgo neurona w sieci
 	 */
 	public void countErrors(double[] outputVector) {
-		
+
 		int layer = this.neuronNetwork.size();
 		double delta = 0d;
 		int counter = 0;
-		
-		//ostatnia warstwa sieci neuronowej
+
+		// ostatnia warstwa sieci neuronowej
 		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
-			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
+			n.setError(n.getOut() * (1 - n.getOut()) * (outputVector[counter] - n.getOut()));
 			counter++;
 		}
-		
-		// pozosta³ê warstwy poza wejsciow¹
+
+		// pozostaï¿½ï¿½ warstwy poza wejsciowï¿½
 		for (int currentLayerNumber = layer; currentLayerNumber > 2; currentLayerNumber--) {
 			int l = 0; // numer wagi
 			for (Neuron n : this.neuronNetwork.get(currentLayerNumber - 2).getNeurons()) {
 				for (Neuron neuronFromPrevLayer : this.neuronNetwork.get(currentLayerNumber - 1).getNeurons()) {
-					delta += neuronFromPrevLayer.getError()*neuronFromPrevLayer.getWeights().get(l);
+					delta += neuronFromPrevLayer.getError() * neuronFromPrevLayer.getWeights().get(l);
 				}
-				n.setError(delta*(n.getOut()*(1-n.getOut())));
+				n.setError(delta * (n.getOut() * (1 - n.getOut())));
 				l++;
 			}
 		}
 	}
-	
-//	public void countErrors(double[] outputVector) {
-//		
-//		int layer = this.neuronNetwork.size();
-//		double delta = 0d;
-//		int counter = 0;
-//		
-//		for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
-//			n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
-//			counter++;
-//		}
-//		
-//		int l = 0; // numer wagi
-//		for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
-//			for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
-//				delta += nlast.getError()*nlast.getWeights().get(l);
-//			}
-//			n.setError(delta*(n.getOut()*(1-n.getOut())));
-//			l++;
-//		}
-//	}
-	
+
+	// public void countErrors(double[] outputVector) {
+	//
+	// int layer = this.neuronNetwork.size();
+	// double delta = 0d;
+	// int counter = 0;
+	//
+	// for (Neuron n : this.neuronNetwork.get(layer - 1).getNeurons()) {
+	// n.setError(n.getOut()*(1-n.getOut())*(outputVector[counter]-n.getOut()));
+	// counter++;
+	// }
+	//
+	// int l = 0; // numer wagi
+	// for (Neuron n : this.neuronNetwork.get(layer - 2).getNeurons()) {
+	// for (Neuron nlast : this.neuronNetwork.get(layer - 1).getNeurons()) {
+	// delta += nlast.getError()*nlast.getWeights().get(l);
+	// }
+	// n.setError(delta*(n.getOut()*(1-n.getOut())));
+	// l++;
+	// }
+	// }
+
 	/*
-	 * obliczanie b³êdu œredniokwadratowego dla podanego wektora wejœciowego
+	 * obliczanie bï¿½ï¿½du ï¿½redniokwadratowego dla podanego wektora wejï¿½ciowego i
+	 * wybranego zbioru wag
 	 */
-	public double meanSquareError(double[] inputVector) {
-		
+	public double meanSquareError2(double[] inputVector) {
+
 		int layer = this.neuronNetwork.size();
 		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
 		int neuronCount = sLayer.getNeurons().size();
 		if (Constants.DEBUG) {
-			System.out.println("\r\nb³¹d œredniokwadratowy:");
+			System.out.println("\r\nbï¿½ï¿½d ï¿½redniokwadratowy:");
 		}
-		
+
 		double delta = 0d;
 		for (int i = 0; i < neuronCount; i++) {
 			double out = sLayer.getNeurons().get(i).getOut();
 			double sq = out - inputVector[i];
-			delta += sq*sq;
+			delta += sq * sq;
 			if (Constants.DEBUG) {
-				System.out.println("out: " + out + " inputVector["+i+"]: " + inputVector[i] + " delta: " + delta);
+				System.out.println("out: " + out + " inputVector[" + i + "]: " + inputVector[i] + " delta: " + delta);
 			}
 		}
 		if (Constants.DEBUG) {
-			System.out.println("["+delta +"/"+neuronCount+"]");
+			System.out.println("[" + delta + "/" + neuronCount + "]");
+		}
+		return delta;
+	}
+
+	/*
+	 * obliczanie bï¿½ï¿½du ï¿½redniokwadratowego dla podanego wektora wejï¿½ciowego
+	 */
+	public double meanSquareError(double[] inputVector) {
+
+		int layer = this.neuronNetwork.size();
+		SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
+		int neuronCount = sLayer.getNeurons().size();
+		if (Constants.DEBUG) {
+			System.out.println("\r\nbï¿½ï¿½d ï¿½redniokwadratowy:");
+		}
+
+		double delta = 0d;
+		for (int i = 0; i < neuronCount; i++) {
+			double out = sLayer.getNeurons().get(i).getOut();
+			double sq = out - inputVector[i];
+			delta += sq * sq;
+			if (Constants.DEBUG) {
+				System.out.println("out: " + out + " inputVector[" + i + "]: " + inputVector[i] + " delta: " + delta);
+			}
+		}
+		if (Constants.DEBUG) {
+			System.out.println("[" + delta + "/" + neuronCount + "]");
 		}
 		return delta / neuronCount;
 	}
-	
+
 	/*
-	 * przeliczenie wag neuronów w sieci
+	 * przeliczenie wag neuronï¿½w w sieci
+	 * 
 	 */
 	public void recalculateWeights() {
-		
+
 		int numberOfLayers = this.neuronNetwork.size();
-		SingleLayer layer = this.neuronNetwork.get(numberOfLayers-1); // ostatnia warstwa
+		SingleLayer layer = this.neuronNetwork.get(numberOfLayers - 1); // ostatnia
+																		// warstwa
 		ArrayList<Neuron> neurons = layer.getNeurons();
-		
-		SingleLayer layer_1 = this.neuronNetwork.get(numberOfLayers-2); // œrodkowa warstwa
+
+		SingleLayer layer_1 = this.neuronNetwork.get(numberOfLayers - 2); // ï¿½rodkowa
+																			// warstwa
 		ArrayList<Neuron> neurons_1 = layer_1.getNeurons();
-		
+
 		for (Neuron n : neurons) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_1.get(i).getOut()) );
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError())
+						* (i == n.getWeights().size() - 1 ? this.bias : neurons_1.get(i).getOut()));
 			}
 			n.getWeights().clear();
 			n.setWeights(newWeights);
 		}
-		
-		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers-3); // pierwsza warstwa
+
+		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers - 3); // pierwsza
+																			// warstwa
 		ArrayList<Neuron> neurons_2 = layer_2.getNeurons();
 
 		for (Neuron n : neurons_1) {
 			ArrayList<Double> newWeights = new ArrayList<>();
 			for (int i = 0; i < n.getWeights().size(); i++) {
-				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError()) * (i == n.getWeights().size()-1 ? this.bias : neurons_2.get(i).getOut())  );
+				newWeights.add(n.getWeights().get(i) + (Constants.EPSILON * n.getError())
+						* (i == n.getWeights().size() - 1 ? this.bias : neurons_2.get(i).getOut()));
 			}
 			n.getWeights().clear();
 			n.setWeights(newWeights);
 		}
-		
+
 	}
-	
+
+//	public void setWeights(Chromosom weights) {
+//		int countWeights = 0;
+//		int numberOfLayers = this.neuronNetwork.size();
+//		SingleLayer layer = this.neuronNetwork.get(numberOfLayers - 1); // ostatnia
+//																		// warstwa
+//		ArrayList<Neuron> neurons = layer.getNeurons();
+//
+//		SingleLayer layer_1 = this.neuronNetwork.get(numberOfLayers - 2); // ï¿½rodkowa
+//																			// warstwa
+//		ArrayList<Neuron> neurons_1 = layer_1.getNeurons();
+//
+//		for (Neuron n : neurons) {
+//			ArrayList<Double> newWeights = new ArrayList<>();
+//			for (int i = 0; i < n.getWeights().size(); i++) {
+//				newWeights.add(weights.getChromosomDec().get(countWeights));
+//				// System.out.println("USTAWIONO WAGE NR: " + countWeights);
+//				countWeights++;
+//			}
+//			n.getWeights().clear();
+//			n.setWeights(newWeights);
+//		}
+//
+//		SingleLayer layer_2 = this.neuronNetwork.get(numberOfLayers - 3); // pierwsza
+//																			// warstwa
+//		ArrayList<Neuron> neurons_2 = layer_2.getNeurons();
+//
+//		for (Neuron n : neurons_1) {
+//			ArrayList<Double> newWeights = new ArrayList<>();
+//			for (int i = 0; i < n.getWeights().size(); i++) {
+//				newWeights.add(weights.getChromosomDec().get(countWeights));
+//				// System.out.println("USTAWIONO WAGE NR: " + countWeights);
+//				countWeights++;
+//			}
+//			n.getWeights().clear();
+//			n.setWeights(newWeights);
+//		}
+//		countWeights = 0;
+//	}
+
 	public ArrayList<SingleLayer> getNeuronNetwork() {
 		return neuronNetwork;
 	}
@@ -257,7 +592,7 @@ public class NeuronNetwork implements Serializable {
 	public void setDescrption(String descrption) {
 		this.descrption = descrption;
 	}
-	
+
 	public int getBias() {
 		return bias;
 	}
@@ -267,24 +602,24 @@ public class NeuronNetwork implements Serializable {
 	}
 
 	@Override
-	public String toString(){ // cala siec wraz z wagami i b³êdami neuronów
+	public String toString() { // cala siec wraz z wagami i bï¿½ï¿½dami neuronï¿½w
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
 			String out = "";
-			for (SingleLayer sl : this.neuronNetwork){
+			for (SingleLayer sl : this.neuronNetwork) {
 				out += sl.toStringOutString();
 			}
 			return descrption + out;
 		}
 		return descrption + " is empty!";
-		
+
 	}
-	
-	public String output(){ // tylko wyjœcia neuronów
+
+	public String output() { // tylko wyjï¿½cia neuronï¿½w
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
 			String out = "\r\n hidden layers outs:\r\n";
-			for (int l = 1; l < this.neuronNetwork.size()-1; l++) {
+			for (int l = 1; l < this.neuronNetwork.size() - 1; l++) {
 				ArrayList<Neuron> neurons = this.neuronNetwork.get(l).getNeurons();
-				for (Neuron n : neurons){
+				for (Neuron n : neurons) {
 					out += n.toStringOutNeuronOutput();
 				}
 				out += "\r\n";
@@ -292,8 +627,8 @@ public class NeuronNetwork implements Serializable {
 
 			out += "output layer outs:\r\n";
 			ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
-			for (Neuron n : neurons2){
-				//out += n.toStringOutNeuronOutputRounded();
+			for (Neuron n : neurons2) {
+				// out += n.toStringOutNeuronOutputRounded();
 				out += n.toStringOutNeuronOutput();
 			}
 			return out + "\r\n";
@@ -301,46 +636,69 @@ public class NeuronNetwork implements Serializable {
 		return descrption + " is empty!";
 	}
 	
-	/** *****************************************************
+	public double[] calculatedOut() {
+		double[] out = {0, 0, 0};
+		int k = 0;
+		ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
+		for (Neuron n : neurons2) {
+			out[k] = n.getOut();
+			k++;
+		}
+		return out;
+	}
+
+	/**
+	 * *****************************************************
 	 * 
 	 * main method to count output (MADALINE)
 	 * 
 	 *********************************************************/
-	public String checkLetter(ArrayList<Integer> inputList){
-		//normalizacja
+	public String checkLetter(ArrayList<Integer> inputList) {
+		// normalizacja
 		int ones = 0;
 		ArrayList<Double> normalizedInputList = new ArrayList<>();
 		// policzenie jedynek w literze
-		for (Integer l : inputList){
+		for (Integer l : inputList) {
 			if (l == 1) {
 				ones++;
 			}
 		}
-		System.out.println("wektor wejœciowy: " + inputList + " jedynki:" + ones);
-		
-		// zamiana jedynek na znormalizowan¹ wartoœæ
-		for (Integer l : inputList){
+		System.out.println("wektor wejï¿½ciowy: " + inputList + " jedynki:" + ones);
+
+		// zamiana jedynek na znormalizowanï¿½ wartoï¿½ï¿½
+		for (Integer l : inputList) {
 			if (l == 1) {
-				normalizedInputList.add(1/Math.sqrt(ones));
+				normalizedInputList.add(1 / Math.sqrt(ones));
 			} else {
 				normalizedInputList.add(0d);
 			}
 		}
-		
+
 		System.out.println("obliczanie:");
-		
-		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); //neurony rozpoznaj¹ce litery
+
+		ArrayList<Neuron> sl = this.neuronNetwork.get(1).getNeurons(); // neurony
+																		// rozpoznajï¿½ce
+																		// litery
 		ArrayList<Double> resultAfterLastLayer = new ArrayList<>();
 		for (Neuron n : sl) {
 			double similarity = n.activate(normalizedInputList);
 			resultAfterLastLayer.add(similarity);
-			if(Constants.DEBUG){
-				System.out.println("dla litery " + Character.toString ((char) Integer.parseInt(n.getDescription())) + " podobieñstwo wynosi: " + similarity);	
+			if (Constants.DEBUG) {
+				System.out.println("dla litery " + Character.toString((char) Integer.parseInt(n.getDescription()))
+						+ " podobieï¿½stwo wynosi: " + similarity);
 			}
-			
+
 		}
-		
+
 		return resultAfterLastLayer.toString();
 	}
-	
+
+//	public Chromosom getNajlepszy() {
+//		return najlepszy;
+//	}
+//
+//	public void setNajlepszy(Chromosom najlepszy) {
+//		this.najlepszy = najlepszy;
+//	}
+
 }

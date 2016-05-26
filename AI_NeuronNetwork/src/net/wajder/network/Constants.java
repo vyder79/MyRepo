@@ -14,10 +14,10 @@ public class Constants implements Serializable {
 	final static boolean DEBUG = false;
 	
 	/** value of error to check if the neuron is learned or not */
-	public static final double ERROR_VALUE = 0.01;
+	public static final double ERROR_VALUE = 0.05;
 	
 	/** small number needs to backward error propagation learning */
-	public static final double EPSILON = 0.05;
+	public static final double EPSILON = 0.1;
 	
 	/** Additional BIAS neuron */
 	public static final int BIAS = 1;
@@ -39,7 +39,7 @@ public class Constants implements Serializable {
 	
 	
 	/** czy uczenie sieci czy wczytanie zapisanej wyuczonej z pliku */
-	public static final boolean LEARN = true;
+	public static final boolean LEARN = false;
 	
 	/** czy zapisanie nauczonej sieci do pliku */
 	public static final boolean SAVE = true;

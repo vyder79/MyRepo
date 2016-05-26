@@ -2,6 +2,7 @@ package net.wajder.game;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Craft extends Sprite {
 
@@ -35,14 +36,14 @@ public class Craft extends Sprite {
 
         if (x < 1) {
             x = 1;
-        } else if (x > 770) {
-        	x = 770;
+        } else if (x > 570) {
+        	x = 570;
         }
 
         if (y < 1) {
             y = 1;
-        } else if (y > 550) {
-        	y = 550;
+        } else if (y > 250) {
+        	y = 250;
         }
     }
 
@@ -73,19 +74,21 @@ public class Craft extends Sprite {
         if (key == KeyEvent.VK_DOWN) {
             dy = SPEED_Y;
         }
+        
+        if (key == KeyEvent.VK_SPACE) {
+        	
+        }
     }
     
-    public void moveCalculatedByNeuralNetwork(double moveX, double moveY) {
-
-        if (moveY <= -0.5) {
+    public void moveCalculatedByNeuralNetwork(double[] positions) {
+    	
+    	// askNeuralNetworkWhatToDo(positions);
+    	
+        if (positions[0] > 0.55) {
             dy = - SPEED_Y;
-        }
-        
-        if (moveY >= -0.5 && moveY <= 0.5) {
+        } else if (positions[2] > 0.55) {
             dy = 0;
-        }
-
-        if (moveY >= 0.5) {
+        } else if (positions[1] > 0.55) {
             dy = SPEED_Y;
         }
     }
