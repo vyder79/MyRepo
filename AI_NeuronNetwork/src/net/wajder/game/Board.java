@@ -17,9 +17,13 @@ import java.util.Arrays;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import net.wajder.network.Constants;
 import net.wajder.network.TrainedNetwork;
+import net.wajder.network.TreningPattern;
 
 public class Board extends JPanel implements ActionListener {
+	
+	double cy = 0;
 
     private Timer timer;
     private Craft craft;
@@ -310,17 +314,39 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = gift.getY(); // 15, 17, 19
     	}
     	
-    	System.out.println(Arrays.toString(this.positions));
+    	System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] {");
     	
     	trainedNetwork.getNet().work(positions);
     	
-    	System.out.println(Arrays.toString(trainedNetwork.getNet().calculatedOut()));
+    	double y = craft.getY();
+    	
+    	final double[] cOutUp = {1.0, 0.0, 0.0};
+    	final double[] cOutStay = {0.0, 1.0, 0.0};
+    	final double[] cOutDown = {0.0, 0.0, 1.0};
+    	
+    	double[] cOut;
+    	
+    	if (cy > y) {
+    		cy = y;
+    		cOut = cOutDown;
+    	} else if (cy < y) {
+    		cy = y;
+    		cOut = cOutUp;
+    	} else {
+    		cy = y;
+    		cOut = cOutStay;
+    	}
+    	
+    	
+    	System.out.println(Arrays.toString(cOut) + "}));");
     	
     	//double moveX = 0.0;
     	//double moveY = Math.random() * 2 - 1;
     	//System.out.println(moveY);
     	//if (craft.getY() > 270) moveY = 0.0;
-    	craft.moveCalculatedByNeuralNetwork(trainedNetwork.getNet().calculatedOut());
+    	if (!Constants.LEARN) {
+    		craft.moveCalculatedByNeuralNetwork(trainedNetwork.getNet().calculatedOut());
+    	}
     	
     	/**
     	[40, 51, 230, 552, 371, 134, 350, 525, 219, 57, 596, 240, 6, 142, 1714, 70, 94, 60, 1550, 39] 0.5
