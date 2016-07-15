@@ -141,7 +141,7 @@ public class NeuronNetwork implements Serializable {
 				this.countErrors(tp.getOutputArray());
 				// meanSquareError += this.meanSquareError(tp.getInputArray());
 				meanSquareError = blad(tp);
-				System.out.println("WZORZEC BLAD " + blad(tp));
+//				System.out.println("WZORZEC BLAD " + blad(tp));
 				this.recalculateWeights();
 			}
 			iterations++;
@@ -159,9 +159,9 @@ public class NeuronNetwork implements Serializable {
 			SingleLayer sLayer = this.neuronNetwork.get(layer - 1);
 			int neuronCount = sLayer.getNeurons().size();
 
-			for (Neuron n : sLayer.getNeurons()) {
-				System.out.println("WYJ��IE Z SIECI " + n.getOut());
-			}
+//			for (Neuron n : sLayer.getNeurons()) {
+//				System.out.println("WYJŚIE Z SIECI " + n.getOut());
+//			}
 		}
 	}
 

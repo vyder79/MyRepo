@@ -298,6 +298,9 @@ public class Board extends JPanel implements ActionListener {
      * 1 = w dó³, -1 = w górê, 0 = brak ruchu.
      */
     private void autoMoving() {
+    	
+    	long patternLimiter = 0;
+    	
     	int i = 0;
     	double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     	this.positions = positions;
@@ -314,31 +317,33 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = gift.getY(); // 15, 17, 19
     	}
     	
-    	System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] {");
-    	
-    	trainedNetwork.getNet().work(positions);
-    	
-    	double y = craft.getY();
-    	
-    	final double[] cOutUp = {1.0, 0.0, 0.0};
-    	final double[] cOutStay = {0.0, 1.0, 0.0};
-    	final double[] cOutDown = {0.0, 0.0, 1.0};
-    	
-    	double[] cOut;
-    	
-    	if (cy > y) {
-    		cy = y;
-    		cOut = cOutDown;
-    	} else if (cy < y) {
-    		cy = y;
-    		cOut = cOutUp;
-    	} else {
-    		cy = y;
-    		cOut = cOutStay;
+    	if (patternLimiter % 10 == 0) {
+	    	System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] {");
+	    	
+	    	trainedNetwork.getNet().work(positions);
+	    	
+	    	double y = craft.getY();
+	    	
+	    	final double[] cOutUp = {1.0, 0.0, 0.0};
+	    	final double[] cOutStay = {0.0, 1.0, 0.0};
+	    	final double[] cOutDown = {0.0, 0.0, 1.0};
+	    	
+	    	double[] cOut;
+	    	
+	    	if (cy > y) {
+	    		cy = y;
+	    		cOut = cOutDown;
+	    	} else if (cy < y) {
+	    		cy = y;
+	    		cOut = cOutUp;
+	    	} else {
+	    		cy = y;
+	    		cOut = cOutStay;
+	    	}
+	    	
+	    	System.out.println(Arrays.toString(cOut) + "}));");
     	}
-    	
-    	
-    	System.out.println(Arrays.toString(cOut) + "}));");
+    	patternLimiter++;
     	
     	//double moveX = 0.0;
     	//double moveY = Math.random() * 2 - 1;
