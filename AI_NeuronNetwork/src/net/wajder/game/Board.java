@@ -24,6 +24,7 @@ import net.wajder.network.TreningPattern;
 public class Board extends JPanel implements ActionListener {
 	
 	double cy = 0;
+	long patternLimiter = 0;
 
     private Timer timer;
     private Craft craft;
@@ -42,14 +43,22 @@ public class Board extends JPanel implements ActionListener {
     private final int PASS_ALIEN_POINTS = 1;
     
     private double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    
+    private int initialRandomX = getRandX();
 
     private TrainedNetwork trainedNetwork = new TrainedNetwork();
     
     private final int[][] pos = {
-    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
-    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
-    	{getRandX(), getRandY()}, {getRandX(), getRandY()}
-    };
+        	{initialRandomX, getRandY()},{initialRandomX+Constants.X_DISTANCE, getRandY()}, {initialRandomX+Constants.X_DISTANCE*2, getRandY()},
+        	{initialRandomX+Constants.X_DISTANCE*3, getRandY()},{initialRandomX+Constants.X_DISTANCE*4, getRandY()}, {initialRandomX+Constants.X_DISTANCE*5, getRandY()},
+        	{initialRandomX+Constants.X_DISTANCE*6, getRandY()}, {initialRandomX+Constants.X_DISTANCE*7, getRandY()}
+        };
+    
+//    private final int[][] pos = {
+//    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
+//    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
+//    	{getRandX(), getRandY()}, {getRandX(), getRandY()}
+//    };
     
     private final int[][] posG = {
         	{getRandXGift(), getRandY()}
@@ -305,8 +314,6 @@ public class Board extends JPanel implements ActionListener {
      */
     private void autoMoving() {
     	
-    	long patternLimiter = 0;
-    	
     	int i = 0;
     	double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     	this.positions = positions;
@@ -323,7 +330,7 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = gift.getY(); // 15, 17, 19
     	}
     	
-    	//if (patternLimiter % 10 == 0) {
+    	if (patternLimiter % 100 == 0) {
 	    	//System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] ");
     		System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + arrayToString() + "}, new double[] ");
     	
@@ -354,7 +361,7 @@ public class Board extends JPanel implements ActionListener {
 	    	
 //	    	System.out.println(Arrays.toString(cOut) + "}));");
 	    	System.out.println(stringCout + "));");
-    	//}
+    	}
     	patternLimiter++;
     	
     	//double moveX = 0.0;

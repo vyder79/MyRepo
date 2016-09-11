@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class ActivationFunction implements Serializable {
 	
-	private double beta = 2.0;
+	private double beta = Constants.BETA;
 	private final double e = Math.E;
 	private ActivFuncEnum activFunc = ActivFuncEnum.LINEAR;
 	

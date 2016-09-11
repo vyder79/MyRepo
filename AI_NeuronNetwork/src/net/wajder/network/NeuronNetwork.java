@@ -131,12 +131,24 @@ public class NeuronNetwork implements Serializable {
 			meanSquareError = 0d;
 			// TODO: nauka powinna za ka�dym razem korzysta� z innej kolejno�ci
 			// wzorc�w treningowych
+			
+			int tpCount = treningPatterns.size() - 1;
+			TreningPattern tpRandom = treningPatterns.get((int) Math.random() * tpCount);
+			
+//			for (int l = 0; l < tpCount * 100; l++) {
+//				tpRandom = treningPatterns.get((int) Math.random() * tpCount);
+//				this.work(tpRandom.getInputArray());
+//				this.countErrors(tpRandom.getOutputArray());
+//				meanSquareError = blad(tpRandom);
+//				this.recalculateWeights();
+//			}
+			
 			for (TreningPattern tp : treningPatterns) {
 				this.work(tp.getInputArray());
 				this.countErrors(tp.getOutputArray());
 				// meanSquareError += this.meanSquareError(tp.getInputArray());
 				meanSquareError = blad(tp);
-//				System.out.println("WZORZEC BLAD " + blad(tp));
+				//System.out.println("WZORZEC BLAD " + blad(tp));
 				this.recalculateWeights();
 			}
 			iterations++;
@@ -611,16 +623,17 @@ public class NeuronNetwork implements Serializable {
 
 	public String output() { // tylko wyj�cia neuron�w
 		if (this.neuronNetwork != null && this.neuronNetwork.size() > 0) {
-			String out = "\r\n hidden layers outs:\r\n";
-			for (int l = 1; l < this.neuronNetwork.size() - 1; l++) {
-				ArrayList<Neuron> neurons = this.neuronNetwork.get(l).getNeurons();
-				for (Neuron n : neurons) {
-					out += n.toStringOutNeuronOutput();
-				}
-				out += "\r\n";
-			}
+			String out = " : ";
+//			out += "\r\n hidden layers outs:\r\n";
+//			for (int l = 1; l < this.neuronNetwork.size() - 1; l++) {
+//				ArrayList<Neuron> neurons = this.neuronNetwork.get(l).getNeurons();
+//				for (Neuron n : neurons) {
+//					out += n.toStringOutNeuronOutput();
+//				}
+//				out += "\r\n";
+//			}
 
-			out += "output layer outs:\r\n";
+			//out += "output layer outs:\r\n";
 			ArrayList<Neuron> neurons2 = this.neuronNetwork.get(this.neuronNetwork.size() - 1).getNeurons();
 			for (Neuron n : neurons2) {
 				// out += n.toStringOutNeuronOutputRounded();
