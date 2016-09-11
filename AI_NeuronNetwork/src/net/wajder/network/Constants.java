@@ -70,9 +70,10 @@ public class Constants implements Serializable {
 	
 	
 	
-	
+	/** rozmieszczenie obiektów 'aliens' horyzontalnie co X_DISTANCE pikseli */
 	public static final int X_DISTANCE = 50;
 	
+	/** rozmieszczenie obiektów na planszy wertykalnie co Y_DISTANCE pikseli */
 	public static final int Y_DISTANCE = 40;
 	
 	

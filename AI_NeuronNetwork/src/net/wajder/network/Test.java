@@ -55,6 +55,7 @@ public class Test {
 		System.out.println("ERROR_VALUE (stop): " + Constants.ERROR_VALUE);
 		System.out.println("EPSILON : " + Constants.EPSILON);
 		System.out.println("BIAS: " + Constants.BIAS);
+		System.out.println("BETA: " + Constants.BETA);
 		System.out.println("********************************\r\n");
 		
 		/*
