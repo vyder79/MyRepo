@@ -317,7 +317,7 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = alien.getY(); // 3, 5, 7, ...
     	}
     	
-    	i = 13;
+    	//i = 13;
     	for (Gift gift : gifts) {
     		positions[++i] = gift.getX(); // 14, 16, 18
     		positions[++i] = gift.getY(); // 15, 17, 19
