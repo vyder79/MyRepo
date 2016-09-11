@@ -18,7 +18,8 @@ public class Gift extends Sprite {
 
     private void initGift() {
 
-        loadImage("d://game_images/star.png");
+//        loadImage("d://game_images/star.png");
+    	loadImage(Constants.IMAGE_PATH + "\\star.png");
         getImageDimensions();
     }
 

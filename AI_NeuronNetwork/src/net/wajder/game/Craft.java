@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.wajder.network.Constants;
+
 public class Craft extends Sprite {
 
     private int dx;
@@ -25,7 +27,8 @@ public class Craft extends Sprite {
     private void initCraft() {
         
         missiles = new ArrayList<>();
-        loadImage("d://game_images/craft3.png");
+//        loadImage("d://game_images/craft3.png");
+        loadImage(Constants.IMAGE_PATH + "\\craft3.png");
         getImageDimensions();
     }
 

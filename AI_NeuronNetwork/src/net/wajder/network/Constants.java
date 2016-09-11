@@ -65,6 +65,10 @@ public class Constants implements Serializable {
 	public static final String PATH_TO_NETWORK_FILE_WITH_TIME = COMMON_PATH + System.currentTimeMillis() + EXTENSION;
 	
 	
+	/** œcie¿ka dla obrazków */
+	public static final String IMAGE_PATH = "C:\\Users\\vyder\\git\\MyRepo\\AI_NeuronNetwork\\src\\net\\wajder\\game\\images";
+	
+	
 	
 	
 	public static final int X_DISTANCE = 50;
