@@ -56,19 +56,14 @@ public class NeuronNetwork implements Serializable {
 				SingleLayer = new SingleLayer(Layer, "layer[" + layer + "]");
 				listOfLayers.add(SingleLayer);
 
-			} else { // kolejne warstwy /// TO by zosta�o
+			} else { // kolejne warstwy /// TO by zostało
 
 				weights.clear();
 				Layer.clear();
 				for (int j = 0; j < layersDesc[layer]; j++) {
 					weights.clear();
-					for (int i = 0; i < layersDesc[layer - 1] + 1; i++) { // jedna
-																			// waga
-																			// wi�cej
-																			// dla
-																			// biasu
-						weights.add(rand.nextDouble() - 0.5); // zakres wag
-																// [-0.5 ; 0.5]
+					for (int i = 0; i < layersDesc[layer - 1] + 1; i++) { // jedna waga  więcej dla biasu
+						weights.add(rand.nextDouble() - 0.5); // zakres wag[-0.5 ; 0.5]
 					}
 					Layer.add(new Neuron((ArrayList<Double>) weights.clone(), "n_" + layer + "_" + j,
 							new ActivationFunction(ActivFuncEnum.SIGMOID)));

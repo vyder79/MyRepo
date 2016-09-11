@@ -1,5 +1,7 @@
 package net.wajder.game;
 
+import net.wajder.network.Constants;
+
 public class Gift extends Sprite {
 
     private final int INITIAL_X = 800;
@@ -23,8 +25,8 @@ public class Gift extends Sprite {
     public void move() {
 
         if (x < 0) {
-            x = (int) (Math.random() * 1200 + 3000);
-        	y = (int) (Math.random() * 580 /10 *10);
+            x = (int) ((Math.random() * 500) + 500);
+        	y = (int) (((Math.random() * 250) / Constants.Y_DISTANCE) * Constants.Y_DISTANCE);
         	passed = true;
         }
 

@@ -47,23 +47,24 @@ public class Board extends JPanel implements ActionListener {
     
     private final int[][] pos = {
     	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
-    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()}
+    	{getRandX(), getRandY()},{getRandX(), getRandY()}, {getRandX(), getRandY()},
+    	{getRandX(), getRandY()}, {getRandX(), getRandY()}
     };
     
     private final int[][] posG = {
-        	{getRandXGift(), getRandY()},{getRandXGift(), getRandY()}, {getRandXGift(), getRandY()}
+        	{getRandXGift(), getRandY()}
         };
     
     private int getRandX() {
-    	return (int) (Math.random() * 1000 + 600);
+    	return (int) ((((Math.random() * 300)  + 300) / Constants.X_DISTANCE) * Constants.X_DISTANCE);
     }
     
     private int getRandXGift() {
-    	return (int) (Math.random() * 3000 + 2000);
+    	return (int) (Math.random() * 10000 + 1000);
     }
     
     private int getRandY() {
-    	return ((int)(Math.random() *150) +30); // ustawione co 30 px
+    	return ((int)(((Math.random() *200)  +50) / Constants.Y_DISTANCE) *  Constants.Y_DISTANCE);
     }
 
     public Board() {
@@ -116,6 +117,8 @@ public class Board extends JPanel implements ActionListener {
         } else {
 
             drawGameOver(g);
+            System.out.println("GAME OVER, points: " + points);
+            //initBoard();
         }
 
         Toolkit.getDefaultToolkit().sync();
@@ -148,9 +151,11 @@ public class Board extends JPanel implements ActionListener {
         }
 
         g.setColor(Color.WHITE);
-        g.drawString("Aliens left: " + aliens.size(), 5, 15);
+        g.drawString("Aliens: " + aliens.size(), 5, 15);
         g.drawString("Points: " + points, 95, 15);
-        g.drawString("Missiles: " + craft.getMissilesToUse(), 185, 15);
+        //g.drawString("Missiles: " + craft.getMissilesToUse(), 185, 15);
+        
+        g.drawRect(0, 0, 400, 300);
     }
 
     private void drawGameOver(Graphics g) {
@@ -237,6 +242,7 @@ public class Board extends JPanel implements ActionListener {
                 a.move();
             } else {
                 gifts.remove(i);
+            	gifts.add(new Gift(2000, (int) Math.random() * 200 + 70));
             }
         }
     }
@@ -317,9 +323,10 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = gift.getY(); // 15, 17, 19
     	}
     	
-    	if (patternLimiter % 10 == 0) {
-	    	System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] {");
-	    	
+    	//if (patternLimiter % 10 == 0) {
+	    	//System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] ");
+    		System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + arrayToString() + "}, new double[] ");
+    	
 	    	trainedNetwork.getNet().work(positions);
 	    	
 	    	double y = craft.getY();
@@ -329,20 +336,25 @@ public class Board extends JPanel implements ActionListener {
 	    	final double[] cOutDown = {0.0, 0.0, 1.0};
 	    	
 	    	double[] cOut;
+	    	String stringCout = "";
 	    	
-	    	if (cy > y) {
+	    	if (cy < y) {
 	    		cy = y;
 	    		cOut = cOutDown;
-	    	} else if (cy < y) {
+	    		stringCout = "{0.0, 0.0, 1.0}";
+	    	} else if (cy > y) {
 	    		cy = y;
 	    		cOut = cOutUp;
+	    		stringCout = "{1.0, 0.0, 0.0}";
 	    	} else {
 	    		cy = y;
 	    		cOut = cOutStay;
+	    		stringCout = "{0.0, 1.0, 0.0}";
 	    	}
 	    	
-	    	System.out.println(Arrays.toString(cOut) + "}));");
-    	}
+//	    	System.out.println(Arrays.toString(cOut) + "}));");
+	    	System.out.println(stringCout + "));");
+    	//}
     	patternLimiter++;
     	
     	//double moveX = 0.0;
@@ -358,6 +370,16 @@ public class Board extends JPanel implements ActionListener {
     	[40, 149, 436, 553, 577, 150, 556, 515, 425, 54, 1, 96, 212, 161, 2126, 70, 506, 60, 1962, 39] 0
     	[40, 195, 567, 558, 708, 153, 687, 507, 556, 60, 132, 100, 343, 144, 2388, 70, 768, 60, 2224, 39] 1
     	*/
+    }
+    
+    private String arrayToString() {
+    	String out = "";
+    	
+    	for (double p : this.positions) {
+    		out += p + ", ";
+    	}
+    	
+    	return  out.substring(0, out.length() - 2);
     }
     
 //    public void keyPressed(KeyEvent e) {

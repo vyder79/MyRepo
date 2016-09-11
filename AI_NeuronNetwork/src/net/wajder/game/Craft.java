@@ -13,8 +13,8 @@ public class Craft extends Sprite {
     /** iloœæ rakiet na wyposa¿eniu statku */
     private int missilesToUse = 5;
     
-    private final int SPEED_X = 1;
-    private final int SPEED_Y = 1;
+    private final int SPEED_X = 3;
+    private final int SPEED_Y = 2;
 
     public Craft(int x, int y) {
         super(x, y);
@@ -25,7 +25,7 @@ public class Craft extends Sprite {
     private void initCraft() {
         
         missiles = new ArrayList<>();
-        loadImage("d://game_images/craft2.png");
+        loadImage("d://game_images/craft3.png");
         getImageDimensions();
     }
 
@@ -36,12 +36,12 @@ public class Craft extends Sprite {
 
         if (x < 1) {
             x = 1;
-        } else if (x > 570) {
-        	x = 570;
+        } else if (x > 270) {
+        	x = 270;
         }
 
-        if (y < 1) {
-            y = 1;
+        if (y < 30) {
+            y = 30;
         } else if (y > 250) {
         	y = 250;
         }
@@ -84,21 +84,32 @@ public class Craft extends Sprite {
     	
     	// askNeuralNetworkWhatToDo(positions);
     	
-    	System.out.println(Arrays.toString(positions));
+    	////////////////////System.out.println(Arrays.toString(positions));
     	
-        if (positions[0] > 0.55) {
-            dy = - SPEED_Y;
-        } else if (positions[1] > 0.55) {
-            dy = 0;
-        } else if (positions[2] > 0.55) {
-            dy = SPEED_Y;
-        }
+    	if (positions[0] > positions[2]){
+    		dy = -SPEED_Y;
+    	} else {
+    		dy = SPEED_Y;
+    	}
+    	if (positions[1] > positions[0] && positions[1] > positions[2]) {
+    		 dy = 0;
+    	}
+    	
+    	System.out.println("ruch: " + dy);
+    	
+//        if (positions[0] > 0.55) {
+//            dy = - SPEED_Y;
+//        } else if (positions[1] > 0.55) {
+//            dy = 0;
+//        } else if (positions[2] > 0.55) {
+//            dy = SPEED_Y;
+//        }
     }
 
     public void fire() {
     	if (missilesToUse > 0) {
     		missiles.add(new Missile(x + width, y));
-    		missilesToUse--;
+    		//missilesToUse--;
     	}
     }
 
