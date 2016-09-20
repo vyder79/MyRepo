@@ -26,13 +26,13 @@ public class Board extends JPanel implements ActionListener {
 	double cy = 0;
 	long patternLimiter = 0;
 
-    private Timer timer;
-    private Craft craft;
-    private ArrayList<Alien> aliens;
-    private ArrayList<Gift> gifts;
+    private Timer timer; 					// 45  -  2,5,0,1,2,9,2,0,3,1,4,6,4,10,2,10,11,0,0,2,7,0,1,6,3,1,0,7,1,8,5,2,1,0,1,0,5,0,2,2,8,0,6,11,5,1,0,0,2,1
+    private Craft craft;					// 300 -  7,1,0,4,14,1,17,2,9,6,0,4,9,1,9,10,10,0,1,8,0,5,2,0,1,1,5,4,6,0,1,4,3,1,2,3,4,0,5,0,0,1,4,3,0,1,6,1,0,10
+    private ArrayList<Alien> aliens;		// 800 -  0,1,7,9,2,2,2,3,0,0,0,2,0,3,1,2,1,0,3,0,1,0,1,1,0,4,1,1,14,8,0,1,3,7,0,4,1,2,0,0,8,0,0,2,1,7,0,0,1,1,4
+    private ArrayList<Gift> gifts;			// 1000 - 3,9,0,3,0,1,0,0,6,3,0,0,7,6,1,5,0,1,0,15,1,0,0,0,5,0,0,4,0,0,2,5,5,0,0,4,0,0,15,3,5,0,1,1,11,7,2,0,6,4,4,1,12
     private boolean ingame;
     private final int ICRAFT_X = 40;
-    private final int ICRAFT_Y = 60;
+    private final int ICRAFT_Y = 120;
     private final int B_WIDTH = 600;
     private final int B_HEIGHT = 300;
     private final int DELAY = 10;
@@ -44,7 +44,8 @@ public class Board extends JPanel implements ActionListener {
     
     private double[] positions = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     
-    private int initialRandomX = getRandX();
+    //private int initialRandomX = getRandX();
+    private int initialRandomX = 240;
 
     private TrainedNetwork trainedNetwork = new TrainedNetwork();
     
@@ -65,7 +66,7 @@ public class Board extends JPanel implements ActionListener {
         };
     
     private int getRandX() {
-    	return (int) ((((Math.random() * 300)  + 300) / Constants.X_DISTANCE) * Constants.X_DISTANCE);
+    	return (int) ((((Math.random() * 100)  + 100) / Constants.X_DISTANCE) * Constants.X_DISTANCE);
     }
     
     private int getRandXGift() {
@@ -330,7 +331,7 @@ public class Board extends JPanel implements ActionListener {
     		positions[++i] = gift.getY(); // 15, 17, 19
     	}
     	
-    	if (patternLimiter % 100 == 0) {
+    	if (patternLimiter % 25 == 0) {
 	    	//System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + Arrays.toString(this.positions) + ", new double[] ");
     		System.out.print("treningPatterns.add(new TreningPattern(new double[] {" + arrayToString() + "}, new double[] ");
     	

@@ -87,13 +87,24 @@ public class Craft extends Sprite {
     	
     	// askNeuralNetworkWhatToDo(positions);
     	
-    	////////////////////System.out.println(Arrays.toString(positions));
+    	System.out.println("positions: " + Arrays.toString(positions));
     	
     	if (positions[0] > positions[2]){
     		dy = -SPEED_Y;
     	} else {
     		dy = SPEED_Y;
     	}
+    	
+//    	if (y < 40 ) {
+//    		dy = -SPEED_Y;
+//    		y = 75;
+//    	}
+//    	if (y > 240) {
+//    		dy = -SPEED_Y;
+//    		y = 205;
+//    	}
+    	
+    	
     	if (positions[1] > positions[0] && positions[1] > positions[2]) {
     		 dy = 0;
     	}

@@ -12,12 +12,29 @@ public class Constants implements Serializable {
 	
 	// when TRUE, additional data is shown when computing weights
 	final static boolean DEBUG = true;
+	final static boolean DEBUG_ERROR = false;
 	
 	/** Structure of the neural network */
-	public static final int[] STRUCTURE = new int[] {20, 40, 20, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 21, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 21, 11, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 41, 21, 11, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 41, 21, 21, 11, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 41, 41, 21, 21, 21, 11, 11, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 41, 41, 31, 31, 31, 21, 21, 21, 21, 11, 11, 11, 3};
+	
+	//public static final int[] STRUCTURE = new int[] {20, 7, 5, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 11, 7, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 41, 21, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 71, 41, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 101, 41, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 250, 121, 3};
+	//public static final int[] STRUCTURE = new int[] {20, 500, 251, 3};
+	
+	public static final int[] STRUCTURE = new int[] {20, 71, 41, 3};
 	
 	/** value of error to check if the neuron is learned or not */
-	public static final double ERROR_VALUE = 0.02;
+	public static final double ERROR_VALUE = 0.15;
 	
 	/** small number needs to backward error propagation learning */
 	public static final double EPSILON = 0.1;
@@ -33,6 +50,9 @@ public class Constants implements Serializable {
 	
 	/** value greater than this one display as 1 */
 	public static final double DISPLAY_AS_ONE = 0.9;
+	
+	/** if trening patterns list should be randomized in every learning cycle */
+	public static final boolean RANDOMIZE_TRENING_PATTERNS = false;
 	
 	
 	
@@ -53,7 +73,9 @@ public class Constants implements Serializable {
 	
 	
 	/** œcie¿ka zapisu/odczytu */
-	public static final String COMMON_PATH = "D:\\NeuronNetworkFiles\\network";
+	public static final String COMMON_PATH = "C:\\NeuronNetworkFiles\\network";
+	
+	public static final String NAME = "_5_1";
 	
 	/** rozszerzenie pliku */
 	public static final String EXTENSION = ".dat";
@@ -62,12 +84,11 @@ public class Constants implements Serializable {
 	public static final String PATH_TO_NETWORK_FILE = COMMON_PATH + EXTENSION;
 	
 	/** œcie¿ka zapisu/odczytu sieci neuronowej jako historia */
-	public static final String PATH_TO_NETWORK_FILE_WITH_TIME = COMMON_PATH + System.currentTimeMillis() + EXTENSION;
+	public static final String PATH_TO_NETWORK_FILE_WITH_TIME = COMMON_PATH + System.currentTimeMillis() + NAME +  EXTENSION;
 	
 	
 	/** œcie¿ka dla obrazków */
-	public static final String IMAGE_PATH = "C:\\Users\\vyder\\git\\MyRepo\\AI_NeuronNetwork\\src\\net\\wajder\\game\\images";
-	
+	public static final String IMAGE_PATH = "C:\\Users\\twydra\\git\\MyRepo\\AI_NeuronNetwork\\src\\net\\wajder\\game\\images";
 	
 	
 	/** rozmieszczenie obiektów 'aliens' horyzontalnie co X_DISTANCE pikseli */
@@ -75,6 +96,8 @@ public class Constants implements Serializable {
 	
 	/** rozmieszczenie obiektów na planszy wertykalnie co Y_DISTANCE pikseli */
 	public static final int Y_DISTANCE = 40;
+
+	
 	
 	
 	

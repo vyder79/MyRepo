@@ -20,7 +20,7 @@ public class SpaceWarByVyder extends JFrame {
         setResizable(false);
         pack();
         
-        setTitle("SpaceWar by vyder");
+        setTitle("SpaceWar");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
